@@ -1,0 +1,78 @@
+import Link from "next/link";
+import { Mail, MapPin, MessageCircle, Phone } from "lucide-react";
+import { Container } from "@/components/layout/Container";
+import { siteConfig } from "@/data/site";
+
+export function Footer() {
+  return (
+    <footer id="contact" className="bg-noble-green-950 text-ivory">
+      <Container className="py-12 md:py-16">
+        <div className="grid gap-10 lg:grid-cols-[1.1fr_0.9fr_0.8fr]">
+          <div>
+            <p className="font-serif text-4xl font-semibold">Noble Grounds</p>
+            <p className="mt-4 max-w-md text-sm leading-7 text-sage-200">
+              Premium grass mowing for homes, landlords, businesses, and estate
+              agents across Leverington and the Wisbech area.
+            </p>
+          </div>
+
+          <div id="areas">
+            <p className="text-sm font-semibold uppercase tracking-[0.16em] text-sage-200">
+              Service areas
+            </p>
+            <div className="mt-4 grid grid-cols-2 gap-2 text-sm text-cream">
+              {siteConfig.serviceAreas.map((area) => (
+                <span
+                  key={area}
+                  className="rounded-md border border-white/10 bg-white/5 px-3 py-2"
+                >
+                  {area}
+                </span>
+              ))}
+            </div>
+          </div>
+
+          <div>
+            <p className="text-sm font-semibold uppercase tracking-[0.16em] text-sage-200">
+              Contact
+            </p>
+            <div className="mt-4 grid gap-3 text-sm text-cream">
+              <a className="flex items-center gap-3" href={`tel:${siteConfig.phone}`}>
+                <Phone className="size-4 text-sage-200" />
+                {siteConfig.phone}
+              </a>
+              <a className="flex items-center gap-3" href={`mailto:${siteConfig.email}`}>
+                <Mail className="size-4 text-sage-200" />
+                {siteConfig.email}
+              </a>
+              <a
+                className="flex items-center gap-3"
+                href={`https://wa.me/${siteConfig.whatsapp.replace(/\D/g, "")}`}
+              >
+                <MessageCircle className="size-4 text-sage-200" />
+                WhatsApp quote photos
+              </a>
+              <span className="flex items-center gap-3">
+                <MapPin className="size-4 text-sage-200" />
+                {siteConfig.location}
+              </span>
+            </div>
+
+            <div className="mt-6 flex flex-wrap gap-3 text-sm text-sage-200">
+              {siteConfig.navigation.map((item) => (
+                <Link key={item.href} href={item.href} className="hover:text-ivory">
+                  {item.label}
+                </Link>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        <div className="mt-10 border-t border-white/10 pt-6 text-xs text-sage-200">
+          Copyright {new Date().getFullYear()} Noble Grounds. Premium grass
+          mowing in Leverington, Wisbech.
+        </div>
+      </Container>
+    </footer>
+  );
+}

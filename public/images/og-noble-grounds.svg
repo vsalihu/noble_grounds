@@ -1,0 +1,12 @@
+<svg width="1200" height="630" viewBox="0 0 1200 630" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1200" height="630" fill="#0B2118"/>
+  <circle cx="178" cy="120" r="260" fill="#9AAA83" opacity="0.22"/>
+  <circle cx="1040" cy="92" r="220" fill="#B79673" opacity="0.2"/>
+  <rect x="72" y="72" width="1056" height="486" rx="28" fill="#FBF8F1"/>
+  <rect x="104" y="104" width="992" height="422" rx="18" fill="#FFFDF7" stroke="#DDD0BD" stroke-width="2"/>
+  <text x="150" y="246" fill="#071710" font-family="Georgia, serif" font-size="82" font-weight="600">Noble Grounds</text>
+  <text x="154" y="318" fill="#1D4635" font-family="Arial, sans-serif" font-size="34" font-weight="600">Premium grass mowing in Leverington and Wisbech</text>
+  <text x="154" y="384" fill="#697A58" font-family="Arial, sans-serif" font-size="28">Homes, landlords, businesses, and estate agents</text>
+  <rect x="154" y="430" width="292" height="58" rx="10" fill="#123226"/>
+  <text x="186" y="468" fill="#FFFDF7" font-family="Arial, sans-serif" font-size="22" font-weight="700">Quote-only service</text>
+</svg>
