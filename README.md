@@ -276,6 +276,19 @@ Common Supabase setup issues:
 - Missing `004_gallery_projects.sql`: dashboard project management and grouped public gallery will not work.
 - Missing `005_gallery_before_after.sql`: before/after image grouping will not work.
 
+### Gallery images not showing?
+
+Check these in order:
+
+- Vercel has `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_ANON_KEY`.
+- The Supabase `gallery` bucket exists and is public.
+- Storage policies from `003_storage_policies.sql` were applied.
+- `gallery_projects` rows exist.
+- `gallery_images.project_id` points to an existing project.
+- `gallery_images.phase` is exactly `before` or `after`.
+- `gallery_images.image_url` is a full public URL, or `storage_path` points to a real file in the `gallery` bucket.
+- If using `next/image` in the future, add the Supabase storage domain to `next.config.ts`. The current gallery uses normal `<img>` tags to avoid remote image domain blocking.
+
 ## Deployment Checklist
 
 Before deploying to Vercel:

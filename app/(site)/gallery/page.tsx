@@ -89,8 +89,12 @@ const placeholderProjects: GalleryProjectWithImages[] = [
 
 export default async function GalleryPage() {
   const projects = await fetchGalleryProjects();
-  const visibleProjects = projects.length > 0 ? projects : placeholderProjects;
-  const hasRealProjects = projects.length > 0;
+  const projectsWithImages = projects.filter(
+    (project) => project.gallery_images.length > 0,
+  );
+  const visibleProjects =
+    projectsWithImages.length > 0 ? projectsWithImages : placeholderProjects;
+  const hasRealProjects = projectsWithImages.length > 0;
 
   return (
     <main>

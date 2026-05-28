@@ -1,5 +1,9 @@
 import { createClient } from "@supabase/supabase-js";
-import type { GalleryProjectWithImages } from "@/types/supabase";
+import type {
+  GalleryImage,
+  GalleryImagePhase,
+  GalleryProjectWithImages,
+} from "@/types/supabase";
 
 export const galleryBucket = "gallery";
 export const maxGalleryImageSize = 5 * 1024 * 1024;
@@ -37,26 +41,65 @@ export async function fetchGalleryProjects(): Promise<GalleryProjectWithImages[]
     },
   });
 
-  const { data, error } = await supabase
+  const { data: projects, error: projectsError } = await supabase
     .from("gallery_projects")
-    .select("*, gallery_images(*)")
+    .select("*")
     .order("display_order", { ascending: true })
     .order("created_at", { ascending: false });
 
-  if (error) {
+  if (projectsError) {
+    console.warn("Gallery projects fetch returned no data.", projectsError.message);
     return [];
   }
 
-  return ((data ?? []) as GalleryProjectWithImages[]).map((project) => ({
-    ...project,
-    gallery_images: sortGalleryImages(project.gallery_images ?? []),
-    before_images: sortGalleryImages(
-      (project.gallery_images ?? []).filter((image) => image.phase === "before"),
-    ),
-    after_images: sortGalleryImages(
-      (project.gallery_images ?? []).filter((image) => image.phase === "after"),
-    ),
-  }));
+  if (!projects || projects.length === 0) {
+    console.warn("Gallery projects fetch succeeded but no projects were found.");
+    return [];
+  }
+
+  const projectIds = projects.map((project) => project.id);
+  const { data: images, error: imagesError } = await supabase
+    .from("gallery_images")
+    .select("*")
+    .in("project_id", projectIds)
+    .order("display_order", { ascending: true })
+    .order("created_at", { ascending: false });
+
+  if (imagesError) {
+    console.warn("Gallery images fetch returned no data.", imagesError.message);
+  }
+
+  const normalisedImages: GalleryImage[] = ((images ?? []) as GalleryImage[]).map((image) => {
+    const publicUrl = image.image_url || getPublicGalleryUrl(image.storage_path);
+    const phase: GalleryImagePhase = image.phase === "before" ? "before" : "after";
+
+    return {
+      ...image,
+      image_url: publicUrl,
+      phase,
+    };
+  });
+
+  return (projects as GalleryProjectWithImages[])
+    .map((project) => {
+      const galleryImages = sortGalleryImages(
+        normalisedImages.filter((image) => image.project_id === project.id),
+      );
+      const beforeImages = sortGalleryImages(
+        galleryImages.filter((image) => image.phase === "before"),
+      );
+      const afterImages = sortGalleryImages(
+        galleryImages.filter((image) => image.phase === "after"),
+      );
+
+      return {
+        ...project,
+        gallery_images: galleryImages,
+        before_images: beforeImages,
+        after_images: afterImages,
+      };
+    })
+    .filter((project) => project.gallery_images.length > 0);
 }
 
 export function sortGalleryImages(images: GalleryProjectWithImages["gallery_images"]) {
@@ -67,4 +110,14 @@ export function sortGalleryImages(images: GalleryProjectWithImages["gallery_imag
 
       return b.created_at.localeCompare(a.created_at);
     });
+}
+
+function getPublicGalleryUrl(storagePath: string) {
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+
+  if (!supabaseUrl || !storagePath) {
+    return "";
+  }
+
+  return `${supabaseUrl}/storage/v1/object/public/${galleryBucket}/${storagePath}`;
 }
