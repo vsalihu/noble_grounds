@@ -5,7 +5,7 @@ import { ImageUp, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { createGalleryStoragePath, galleryBucket, maxGalleryImageSize } from "@/lib/gallery";
 import { supabase } from "@/lib/supabase/client";
-import type { GalleryProject } from "@/types/supabase";
+import type { GalleryImagePhase, GalleryProject } from "@/types/supabase";
 
 type ProjectImageUploadFormProps = {
   project: GalleryProject;
@@ -23,6 +23,7 @@ export function ProjectImageUploadForm({
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [altText, setAltText] = useState("");
+  const [phase, setPhase] = useState<GalleryImagePhase>("after");
   const [isFeatured, setIsFeatured] = useState(false);
   const [displayOrder, setDisplayOrder] = useState("0");
   const [error, setError] = useState("");
@@ -97,6 +98,7 @@ export function ProjectImageUploadForm({
         description: description.trim() || null,
         location: project.location ?? project.address,
         alt_text: files.length > 1 ? `${altText.trim()} ${index + 1}` : altText.trim(),
+        phase,
         is_featured: isFeatured && index === 0,
         display_order: (Number(displayOrder) || 0) + index,
       });
@@ -113,6 +115,7 @@ export function ProjectImageUploadForm({
     setTitle("");
     setDescription("");
     setAltText("");
+    setPhase("after");
     setIsFeatured(false);
     setDisplayOrder("0");
     setMessage("Images uploaded to this project.");
@@ -129,6 +132,17 @@ export function ProjectImageUploadForm({
       <label className="grid gap-2 text-sm font-semibold text-noble-green-800">
         Images for {project.title}
         <input className={inputClass} type="file" accept="image/*" multiple onChange={handleFileChange} />
+      </label>
+      <label className="grid gap-2 text-sm font-semibold text-noble-green-800">
+        Section
+        <select
+          className={inputClass}
+          value={phase}
+          onChange={(event) => setPhase(event.target.value as GalleryImagePhase)}
+        >
+          <option value="before">Before</option>
+          <option value="after">After</option>
+        </select>
       </label>
       <label className="grid gap-2 text-sm font-semibold text-noble-green-800">
         Image title

@@ -37,7 +37,7 @@ const placeholderProjects: GalleryProjectWithImages[] = [
     display_order: 0,
     created_at: "2026-01-01T00:00:00.000Z",
     updated_at: "2026-01-01T00:00:00.000Z",
-    gallery_images: [1, 2, 3].map((item) => ({
+    gallery_images: [1, 2, 3, 4].map((item) => ({
       id: `placeholder-residential-${item}`,
       project_id: "placeholder-residential",
       image_url: "",
@@ -45,7 +45,11 @@ const placeholderProjects: GalleryProjectWithImages[] = [
       title: `Residential placeholder ${item}`,
       description: null,
       location: "Leverington",
-      alt_text: "Future residential lawn mowing project photo in Leverington",
+      alt_text:
+        item <= 2
+          ? "Future before lawn mowing project photo in Leverington"
+          : "Future after lawn mowing project photo in Leverington",
+      phase: item <= 2 ? "before" : "after",
       is_featured: item === 1,
       display_order: item,
       created_at: "2026-01-01T00:00:00.000Z",
@@ -63,7 +67,7 @@ const placeholderProjects: GalleryProjectWithImages[] = [
     display_order: 1,
     created_at: "2026-01-01T00:00:00.000Z",
     updated_at: "2026-01-01T00:00:00.000Z",
-    gallery_images: [1, 2, 3].map((item) => ({
+    gallery_images: [1, 2, 3, 4].map((item) => ({
       id: `placeholder-business-${item}`,
       project_id: "placeholder-business",
       image_url: "",
@@ -71,7 +75,11 @@ const placeholderProjects: GalleryProjectWithImages[] = [
       title: `Business placeholder ${item}`,
       description: null,
       location: "Wisbech",
-      alt_text: "Future business grounds mowing project photo in Wisbech",
+      alt_text:
+        item <= 2
+          ? "Future before business grounds mowing project photo in Wisbech"
+          : "Future after business grounds mowing project photo in Wisbech",
+      phase: item <= 2 ? "before" : "after",
       is_featured: item === 1,
       display_order: item,
       created_at: "2026-01-01T00:00:00.000Z",

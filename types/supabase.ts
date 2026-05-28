@@ -1,4 +1,5 @@
 export type QuoteEnquiryStatus = "new" | "contacted" | "quoted" | "closed";
+export type GalleryImagePhase = "before" | "after";
 
 export type QuoteEnquiry = {
   id: string;
@@ -23,6 +24,7 @@ export type GalleryImage = {
   description: string | null;
   location: string | null;
   alt_text: string;
+  phase: GalleryImagePhase;
   is_featured: boolean;
   display_order: number;
   created_at: string;
@@ -43,4 +45,6 @@ export type GalleryProject = {
 
 export type GalleryProjectWithImages = GalleryProject & {
   gallery_images: GalleryImage[];
+  before_images?: GalleryImage[];
+  after_images?: GalleryImage[];
 };

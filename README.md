@@ -152,6 +152,7 @@ supabase/migrations/001_quote_enquiries.sql
 supabase/migrations/002_gallery_images.sql
 supabase/migrations/003_storage_policies.sql
 supabase/migrations/004_gallery_projects.sql
+supabase/migrations/005_gallery_before_after.sql
 ```
 
 The migrations create:
@@ -159,6 +160,7 @@ The migrations create:
 - `quote_enquiries` for private quote submissions.
 - `gallery_images` for future public gallery metadata.
 - `gallery_projects` for address/project gallery sections.
+- `gallery_images.phase` for Before and After image sections.
 - A public Storage bucket named `gallery`.
 - RLS policies so public users cannot read quote enquiries.
 - RLS policies so public users can read gallery images.
@@ -219,9 +221,10 @@ Admin workflow:
 
 1. Create a project/address section.
 2. Select that project.
-3. Upload one or more images to that project.
-4. Edit project details or individual image metadata when needed.
-5. Delete images individually, or delete the whole project.
+3. Choose Before or After.
+4. Upload one or more images to that project section.
+5. Edit project details or individual image metadata when needed.
+6. Delete images individually, or delete the whole project.
 
 Project fields:
 
@@ -250,11 +253,12 @@ The upload form accepts image files only and limits files to 5MB. After upload, 
 - storage path
 - title
 - description
+- phase: `before` or `after`
 - alt text
 - featured status
 - display order
 
-The public `/gallery` page fetches `gallery_projects` with nested `gallery_images`. Projects are ordered by `display_order` then `created_at`, and images are ordered by `display_order` then `created_at`. If Supabase is missing, unreachable, or has no projects, grouped premium placeholder projects remain visible.
+The public `/gallery` page fetches `gallery_projects` with nested `gallery_images`. Projects are ordered by `display_order` then `created_at`, and images are ordered by `display_order` then `created_at`. Each project displays Before and After sections when images exist for those phases. If both phases exist, the first before and first after image are shown together as a simple comparison block. If Supabase is missing, unreachable, or has no projects, grouped premium placeholder projects remain visible.
 
 Deleting a project:
 
@@ -270,6 +274,7 @@ Common Supabase setup issues:
 - Migrations not applied: tables, bucket, or RLS policies will be missing.
 - Storage path not starting with `gallery/`: upload policy will reject the file.
 - Missing `004_gallery_projects.sql`: dashboard project management and grouped public gallery will not work.
+- Missing `005_gallery_before_after.sql`: before/after image grouping will not work.
 
 ## Deployment Checklist
 

@@ -49,12 +49,22 @@ export async function fetchGalleryProjects(): Promise<GalleryProjectWithImages[]
 
   return ((data ?? []) as GalleryProjectWithImages[]).map((project) => ({
     ...project,
-    gallery_images: [...(project.gallery_images ?? [])].sort((a, b) => {
+    gallery_images: sortGalleryImages(project.gallery_images ?? []),
+    before_images: sortGalleryImages(
+      (project.gallery_images ?? []).filter((image) => image.phase === "before"),
+    ),
+    after_images: sortGalleryImages(
+      (project.gallery_images ?? []).filter((image) => image.phase === "after"),
+    ),
+  }));
+}
+
+export function sortGalleryImages(images: GalleryProjectWithImages["gallery_images"]) {
+  return [...images].sort((a, b) => {
       if (a.display_order !== b.display_order) {
         return a.display_order - b.display_order;
       }
 
       return b.created_at.localeCompare(a.created_at);
-    }),
-  }));
+    });
 }
