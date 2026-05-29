@@ -49,7 +49,11 @@ export function AdminDashboardShell() {
     );
 
     setProjects(nextProjects);
-    setSelectedProjectId((current) => current ?? nextProjects[0]?.id ?? null);
+    setSelectedProjectId((current) =>
+      current && nextProjects.some((project) => project.id === current)
+        ? current
+        : null,
+    );
   }, []);
 
   useEffect(() => {

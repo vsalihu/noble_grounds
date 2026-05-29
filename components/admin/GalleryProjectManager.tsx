@@ -1,20 +1,19 @@
 "use client";
 
 import { useState } from "react";
-import { ImagePlus, Pencil, Trash2 } from "lucide-react";
-import { GalleryComparisonForm } from "@/components/admin/GalleryComparisonForm";
-import { GalleryComparisonManager } from "@/components/admin/GalleryComparisonManager";
+import { AdminActionBar } from "@/components/admin/AdminActionBar";
 import { GalleryProjectForm } from "@/components/admin/GalleryProjectForm";
-import { Button } from "@/components/ui/Button";
+import { ProjectCard } from "@/components/admin/ProjectCard";
+import { ProjectWorkspace } from "@/components/admin/ProjectWorkspace";
 import { Card } from "@/components/ui/Card";
 import { galleryBucket } from "@/lib/gallery";
 import { supabase } from "@/lib/supabase/client";
-import type { GalleryProject, GalleryProjectWithComparisons } from "@/types/supabase";
+import type { GalleryProjectWithComparisons } from "@/types/supabase";
 
 type GalleryProjectManagerProps = {
   projects: GalleryProjectWithComparisons[];
   selectedProjectId: string | null;
-  onSelectProject: (projectId: string) => void;
+  onSelectProject: (projectId: string | null) => void;
   onChanged: () => Promise<void>;
 };
 
@@ -24,12 +23,12 @@ export function GalleryProjectManager({
   onSelectProject,
   onChanged,
 }: GalleryProjectManagerProps) {
-  const [editingProject, setEditingProject] = useState<GalleryProject | null>(null);
-  const [mode, setMode] = useState<"upload" | "manage">("upload");
+  const [isAddingProject, setIsAddingProject] = useState(false);
   const [deletingProjectId, setDeletingProjectId] = useState<string | null>(null);
+  const [message, setMessage] = useState("");
   const [error, setError] = useState("");
   const selectedProject =
-    projects.find((project) => project.id === selectedProjectId) ?? projects[0] ?? null;
+    projects.find((project) => project.id === selectedProjectId) ?? null;
 
   async function deleteProject(project: GalleryProjectWithComparisons) {
     if (!supabase) {
@@ -37,12 +36,17 @@ export function GalleryProjectManager({
       return;
     }
 
-    if (!window.confirm(`Delete "${project.title}" and every before/after pair?`)) {
+    if (
+      !window.confirm(
+        `Delete "${project.title}"? This deletes every before/after pair in the project and removes the storage images.`,
+      )
+    ) {
       return;
     }
 
     setDeletingProjectId(project.id);
     setError("");
+    setMessage("");
 
     const paths = project.gallery_comparisons.flatMap((comparison) => [
       comparison.before_storage_path,
@@ -72,176 +76,109 @@ export function GalleryProjectManager({
       return;
     }
 
+    if (selectedProjectId === project.id) {
+      onSelectProject(null);
+    }
+
     setDeletingProjectId(null);
+    setMessage("Project deleted.");
     await onChanged();
   }
 
+  if (selectedProject) {
+    return (
+      <ProjectWorkspace
+        project={selectedProject}
+        isDeleting={deletingProjectId === selectedProject.id}
+        onClose={() => onSelectProject(null)}
+        onDelete={() => void deleteProject(selectedProject)}
+        onChanged={onChanged}
+      />
+    );
+  }
+
   return (
-    <div className="grid gap-6 xl:grid-cols-[0.95fr_1.05fr]">
-      <Card className="p-5 md:p-6">
-        <h2 className="font-serif text-4xl font-semibold text-noble-green-950">
-          Project sections
-        </h2>
-        <p className="mt-3 text-sm leading-7 text-noble-green-700">
-          Step 1: create or select the address/project. Step 2: upload a
-          before/after pair. Step 3: manage or replace pairs.
-        </p>
+    <div className="grid gap-6">
+      <AdminActionBar
+        isAddingProject={isAddingProject}
+        onAddProject={() => {
+          setIsAddingProject((current) => !current);
+          setMessage("");
+          setError("");
+        }}
+        onManageProjects={() => {
+          setIsAddingProject(false);
+          onSelectProject(null);
+        }}
+        onRefresh={() => void onChanged()}
+      />
 
-        {error ? (
-          <div className="mt-5 rounded-md border border-earth-200 bg-earth-200/35 px-4 py-3 text-sm font-medium text-earth-700" role="alert">
-            {error}
-          </div>
-        ) : null}
-
-        <div className="mt-6 grid gap-4">
-          {projects.length === 0 ? (
-            <div className="rounded-md border border-border-soft bg-cream p-4 text-sm text-noble-green-700">
-              No projects yet. Create the first project/address section.
-            </div>
-          ) : null}
-
-          {projects.map((project) => {
-            const isSelected = selectedProject?.id === project.id;
-
-            return (
-              <div
-                key={project.id}
-                className={`rounded-lg border p-4 transition ${
-                  isSelected ? "border-sage-500 bg-sage-100/50" : "border-border-soft bg-ivory"
-                }`}
-              >
-                <div className="flex items-start justify-between gap-3">
-                  <div>
-                    <h3 className="font-serif text-3xl font-semibold text-noble-green-950">
-                      {project.title}
-                    </h3>
-                    <p className="mt-1 text-sm text-noble-green-700">
-                      {project.address}
-                      {project.location ? ` / ${project.location}` : ""}
-                    </p>
-                    <p className="mt-2 text-sm text-sage-700">
-                      {project.customer_type ?? "No type"} /{" "}
-                      {project.gallery_comparisons.length} comparison
-                      {project.gallery_comparisons.length === 1 ? "" : "s"}
-                    </p>
-                  </div>
-                  {project.is_featured ? (
-                    <span className="rounded-md bg-sage-100 px-2 py-1 text-xs font-semibold text-noble-green-800">
-                      Featured
-                    </span>
-                  ) : null}
-                </div>
-                <div className="mt-4 grid gap-2 min-[430px]:grid-cols-2">
-                  <Button
-                    type="button"
-                    variant="secondary"
-                    onClick={() => {
-                      onSelectProject(project.id);
-                      setMode("upload");
-                    }}
-                  >
-                    <ImagePlus className="mr-2 size-4" />
-                    Add pair
-                  </Button>
-                  <Button
-                    type="button"
-                    variant="secondary"
-                    onClick={() => {
-                      onSelectProject(project.id);
-                      setMode("manage");
-                    }}
-                  >
-                    Manage pairs
-                  </Button>
-                  <Button
-                    type="button"
-                    variant="secondary"
-                    onClick={() => setEditingProject(project)}
-                  >
-                    <Pencil className="mr-2 size-4" />
-                    Edit project
-                  </Button>
-                  <Button
-                    type="button"
-                    variant="secondary"
-                    onClick={() => void deleteProject(project)}
-                    disabled={deletingProjectId === project.id}
-                  >
-                    <Trash2 className="mr-2 size-4" />
-                    {deletingProjectId === project.id ? "Deleting" : "Delete project"}
-                  </Button>
-                </div>
-              </div>
-            );
-          })}
+      {error ? (
+        <div className="rounded-md border border-earth-200 bg-earth-200/35 px-4 py-3 text-sm font-medium text-earth-700" role="alert">
+          {error}
         </div>
-      </Card>
+      ) : null}
+      {message ? (
+        <div className="rounded-md border border-sage-200 bg-sage-100 px-4 py-3 text-sm font-medium text-noble-green-800" role="status">
+          {message}
+        </div>
+      ) : null}
 
-      <div className="grid gap-6">
+      {isAddingProject ? (
         <Card className="p-5 md:p-6">
           <h2 className="font-serif text-4xl font-semibold text-noble-green-950">
-            {editingProject ? "Edit project" : "Create project"}
+            Add project
           </h2>
+          <p className="mt-3 text-sm leading-7 text-noble-green-700">
+            Create the address or project section first. You will add before/after
+            pairs after opening the project.
+          </p>
           <div className="mt-6">
             <GalleryProjectForm
-              key={editingProject?.id ?? "new-project"}
-              project={editingProject}
               onSaved={async () => {
-                setEditingProject(null);
+                setIsAddingProject(false);
+                setMessage("Project created. Open the project card to add photos.");
                 await onChanged();
               }}
-              onCancel={editingProject ? () => setEditingProject(null) : undefined}
+              onCancel={() => setIsAddingProject(false)}
             />
           </div>
         </Card>
+      ) : null}
 
-        <Card className="p-5 md:p-6">
-          <div className="flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
-            <div>
-              <h2 className="font-serif text-4xl font-semibold text-noble-green-950">
-                Before/after pairs
-              </h2>
-              <p className="mt-3 text-sm leading-7 text-noble-green-700">
-                {selectedProject
-                  ? `Selected: ${selectedProject.title}`
-                  : "Create a project before adding comparisons."}
-              </p>
-            </div>
-            <div className="flex gap-2">
-              <Button
-                type="button"
-                variant={mode === "upload" ? "primary" : "secondary"}
-                onClick={() => setMode("upload")}
-              >
-                Add
-              </Button>
-              <Button
-                type="button"
-                variant={mode === "manage" ? "primary" : "secondary"}
-                onClick={() => setMode("manage")}
-              >
-                Manage
-              </Button>
-            </div>
+      <section>
+        <div className="flex flex-col gap-2 md:flex-row md:items-end md:justify-between">
+          <div>
+            <h2 className="font-serif text-4xl font-semibold text-noble-green-950">
+              Projects
+            </h2>
+            <p className="mt-2 text-sm leading-7 text-noble-green-700">
+              Open one project to upload, reorder, edit, or delete its before/after pairs.
+            </p>
           </div>
+          <p className="text-sm font-semibold text-sage-700">
+            {projects.length} project{projects.length === 1 ? "" : "s"}
+          </p>
+        </div>
 
-          <div className="mt-6">
-            {!selectedProject ? (
-              <div className="rounded-md border border-border-soft bg-cream p-4 text-sm text-noble-green-700">
-                No project selected.
-              </div>
-            ) : mode === "upload" ? (
-              <GalleryComparisonForm project={selectedProject} onSaved={onChanged} />
-            ) : (
-              <GalleryComparisonManager
-                project={selectedProject}
-                comparisons={selectedProject.gallery_comparisons}
-                onChanged={onChanged}
+        {projects.length === 0 ? (
+          <Card className="mt-5 p-5 text-sm leading-7 text-noble-green-700">
+            No projects yet. Use Add Project to create the first gallery section.
+          </Card>
+        ) : (
+          <div className="mt-5 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+            {projects.map((project) => (
+              <ProjectCard
+                key={project.id}
+                project={project}
+                isDeleting={deletingProjectId === project.id}
+                onOpen={() => onSelectProject(project.id)}
+                onDelete={() => void deleteProject(project)}
               />
-            )}
+            ))}
           </div>
-        </Card>
-      </div>
+        )}
+      </section>
     </div>
   );
 }

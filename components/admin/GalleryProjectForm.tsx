@@ -41,8 +41,8 @@ export function GalleryProjectForm({
       return;
     }
 
-    if (!title.trim() || !address.trim()) {
-      setError("Project title and address/location label are required.");
+    if (!title.trim()) {
+      setError("Project title is required.");
       return;
     }
 
@@ -50,7 +50,7 @@ export function GalleryProjectForm({
 
     const payload = {
       title: title.trim(),
-      address: address.trim(),
+      address: address.trim() || location.trim() || "Private location",
       location: location.trim() || null,
       customer_type: customerType || null,
       description: description.trim() || null,
@@ -105,7 +105,7 @@ export function GalleryProjectForm({
         Address or public location label
         <input className={inputClass} value={address} onChange={(event) => setAddress(event.target.value)} placeholder="Leverington, Wisbech" />
         <span className="text-xs font-medium text-sage-700">
-          Avoid full private addresses unless the customer has agreed.
+          Optional. Avoid full private addresses unless the customer has agreed.
         </span>
       </label>
 

@@ -222,11 +222,12 @@ The dashboard is project-based so public photos are grouped by address or projec
 Admin workflow:
 
 1. Create a project/address section.
-2. Select that project.
+2. Open the project card.
 3. Upload a before image and an after image together.
-4. Add optional title, description, location, alt text, featured status, and display order.
+4. Reorder comparison pairs with display order, Move up, Move down, or Set first.
 5. Edit project details or comparison metadata when needed.
 6. Replace the before image, replace the after image, delete a comparison, or delete the whole project.
+7. Close the project workspace to return to the project cards.
 
 Project fields:
 
@@ -241,6 +242,8 @@ Project fields:
 Avoid publishing exact private customer addresses without permission. Use public labels such as `Leverington, Wisbech` where possible.
 
 Captions and text fields are optional so Albert can upload photos quickly from a phone.
+
+The admin dashboard default view is intentionally simple: it shows small project cards only. Upload forms and image management are hidden until a project is opened, which keeps the mobile admin page easier to use on site.
 
 The dashboard uploads images to the public Supabase Storage bucket named `gallery`.
 
