@@ -3,20 +3,21 @@ import { Container } from "@/components/layout/Container";
 import { Section } from "@/components/layout/Section";
 import { PageHero } from "@/components/sections/PageHero";
 import { GalleryProjectGrid } from "@/components/gallery/GalleryProjectGrid";
-import { fetchGalleryProjects } from "@/lib/gallery";
+import { fetchGalleryProjectsWithComparisons } from "@/lib/gallery";
 import { breadcrumbJsonLd, createMetadata } from "@/lib/seo";
-import type { GalleryProjectWithImages } from "@/types/supabase";
+import type { GalleryProjectWithComparisons } from "@/types/supabase";
 
 export const metadata = createMetadata({
-  title: "Grass Mowing Gallery for Leverington and Wisbech",
+  title: "Before and After Grass Mowing Gallery for Leverington and Wisbech",
   description:
-    "Grouped Noble Grounds project gallery for premium grass mowing, lawn care and property presentation work in Leverington, Wisbech and nearby areas.",
+    "Noble Grounds before and after gallery for premium grass mowing, lawn care and property presentation work in Leverington, Wisbech and nearby areas.",
   path: "/gallery",
-  ogTitle: "Grouped Grass Mowing Gallery | Noble Grounds",
+  ogTitle: "Before and After Grass Mowing Gallery | Noble Grounds",
   ogDescription:
-    "Address-based project sections for lawn mowing, grass cutting and property presentation around Leverington and Wisbech.",
+    "Tap-to-flip before and after project cards for lawn mowing, grass cutting and property presentation around Leverington and Wisbech.",
   keywords: [
     "grass mowing gallery Wisbech",
+    "before after lawn mowing Leverington",
     "lawn care gallery Leverington",
     "property presentation Wisbech",
   ],
@@ -24,7 +25,7 @@ export const metadata = createMetadata({
 
 export const revalidate = 60;
 
-const placeholderProjects: GalleryProjectWithImages[] = [
+const placeholderProjects: GalleryProjectWithComparisons[] = [
   {
     id: "placeholder-residential",
     title: "Front lawn refresh",
@@ -32,27 +33,26 @@ const placeholderProjects: GalleryProjectWithImages[] = [
     location: "Leverington",
     customer_type: "Residential",
     description:
-      "A clean project section for future before-and-after lawn presentation photos.",
+      "A clean project section ready for real before-and-after lawn presentation photos.",
     is_featured: true,
     display_order: 0,
     created_at: "2026-01-01T00:00:00.000Z",
     updated_at: "2026-01-01T00:00:00.000Z",
-    gallery_images: [1, 2, 3, 4].map((item) => ({
+    gallery_comparisons: [1, 2, 3].map((item) => ({
       id: `placeholder-residential-${item}`,
       project_id: "placeholder-residential",
-      image_url: "",
-      storage_path: "",
-      title: `Residential placeholder ${item}`,
+      before_image_url: "",
+      before_storage_path: "",
+      after_image_url: "",
+      after_storage_path: "",
+      title: item === 1 ? "Tap to reveal the finished cut" : null,
       description: null,
       location: "Leverington",
-      alt_text:
-        item <= 2
-          ? "Future before lawn mowing project photo in Leverington"
-          : "Future after lawn mowing project photo in Leverington",
-      phase: item <= 2 ? "before" : "after",
+      alt_text: "Noble Grounds lawn mowing before and after in Leverington",
       is_featured: item === 1,
       display_order: item,
       created_at: "2026-01-01T00:00:00.000Z",
+      updated_at: "2026-01-01T00:00:00.000Z",
     })),
   },
   {
@@ -62,39 +62,34 @@ const placeholderProjects: GalleryProjectWithImages[] = [
     location: "Wisbech",
     customer_type: "Business",
     description:
-      "A grouped project layout ready for commercial mowing and frontage photos.",
+      "A grouped comparison layout ready for commercial mowing and frontage photos.",
     is_featured: false,
     display_order: 1,
     created_at: "2026-01-01T00:00:00.000Z",
     updated_at: "2026-01-01T00:00:00.000Z",
-    gallery_images: [1, 2, 3, 4].map((item) => ({
+    gallery_comparisons: [1, 2].map((item) => ({
       id: `placeholder-business-${item}`,
       project_id: "placeholder-business",
-      image_url: "",
-      storage_path: "",
-      title: `Business placeholder ${item}`,
+      before_image_url: "",
+      before_storage_path: "",
+      after_image_url: "",
+      after_storage_path: "",
+      title: null,
       description: null,
       location: "Wisbech",
-      alt_text:
-        item <= 2
-          ? "Future before business grounds mowing project photo in Wisbech"
-          : "Future after business grounds mowing project photo in Wisbech",
-      phase: item <= 2 ? "before" : "after",
+      alt_text: "Noble Grounds business grounds mowing before and after in Wisbech",
       is_featured: item === 1,
       display_order: item,
       created_at: "2026-01-01T00:00:00.000Z",
+      updated_at: "2026-01-01T00:00:00.000Z",
     })),
   },
 ];
 
 export default async function GalleryPage() {
-  const projects = await fetchGalleryProjects();
-  const projectsWithImages = projects.filter(
-    (project) => project.gallery_images.length > 0,
-  );
-  const visibleProjects =
-    projectsWithImages.length > 0 ? projectsWithImages : placeholderProjects;
-  const hasRealProjects = projectsWithImages.length > 0;
+  const projects = await fetchGalleryProjectsWithComparisons();
+  const visibleProjects = projects.length > 0 ? projects : placeholderProjects;
+  const hasRealProjects = projects.length > 0;
 
   return (
     <main>
@@ -104,10 +99,10 @@ export default async function GalleryPage() {
           { name: "Gallery", path: "/gallery" },
         ])}
       />
-      <PageHero eyebrow="Gallery" title="Project gallery, organised by address and finish.">
+      <PageHero eyebrow="Gallery" title="Before and after lawn transformations.">
         {hasRealProjects
-          ? "Browse Noble Grounds project sections grouped by address or location, with photos kept together for each lawn or property."
-          : "Project photos will be added soon. The gallery is now structured by address or project so future work stays organised and easy to browse."}
+          ? "Browse Noble Grounds project sections grouped by address or location. Tap each card to flip from the before photo to the finished result."
+          : "Project photos will be added soon. The gallery is structured for before-and-after cards so future work stays organised and easy to browse."}
       </PageHero>
       <Section className="pt-0">
         <Container>

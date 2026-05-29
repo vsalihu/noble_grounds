@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import type { GalleryProjectWithImages } from "@/types/supabase";
+import type { GalleryProjectWithComparisons } from "@/types/supabase";
 import { GalleryProjectCard } from "@/components/gallery/GalleryProjectCard";
 
 const filters = ["All", "Residential", "Landlord", "Business", "Estate Agent"];
@@ -9,7 +9,7 @@ const filters = ["All", "Residential", "Landlord", "Business", "Estate Agent"];
 export function GalleryProjectGrid({
   projects,
 }: {
-  projects: GalleryProjectWithImages[];
+  projects: GalleryProjectWithComparisons[];
 }) {
   const [activeFilter, setActiveFilter] = useState("All");
   const visibleProjects = useMemo(

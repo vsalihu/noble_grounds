@@ -153,6 +153,7 @@ supabase/migrations/002_gallery_images.sql
 supabase/migrations/003_storage_policies.sql
 supabase/migrations/004_gallery_projects.sql
 supabase/migrations/005_gallery_before_after.sql
+supabase/migrations/006_gallery_comparisons.sql
 ```
 
 The migrations create:
@@ -161,6 +162,7 @@ The migrations create:
 - `gallery_images` for future public gallery metadata.
 - `gallery_projects` for address/project gallery sections.
 - `gallery_images.phase` for Before and After image sections.
+- `gallery_comparisons` for paired before/after flip cards.
 - A public Storage bucket named `gallery`.
 - RLS policies so public users cannot read quote enquiries.
 - RLS policies so public users can read gallery images.
@@ -186,7 +188,7 @@ After creating the user, mark them as an admin by setting app metadata:
 
 The SQL policies use `auth.jwt()->'app_metadata'->>'role' = 'admin'` through the `public.is_admin()` helper.
 
-The admin dashboard uses `gallery_projects`, `gallery_images`, and the `gallery` bucket to store uploaded project photos and display them publicly.
+The admin dashboard uses `gallery_projects`, `gallery_comparisons`, and the `gallery` bucket to store paired before/after photos and display them publicly. The old `gallery_images` table remains for compatibility, but the public gallery now prefers `gallery_comparisons`.
 
 ## Admin Dashboard
 
@@ -213,18 +215,18 @@ To create an admin:
 
 The dashboard checks the logged-in user's `app_metadata.role`. Non-admin users are signed out and redirected to `/login`. Gallery inserts, updates, deletes, and storage writes are also protected by Supabase RLS policies.
 
-## Project-Based Gallery Uploads
+## Project-Based Before/After Gallery Uploads
 
-The dashboard is project-based so public photos are grouped by address or project instead of appearing as one random image dump.
+The dashboard is project-based so public photos are grouped by address or project instead of appearing as one random image dump. Each public card is now one before/after comparison: the visitor sees the Before image first, taps the card, and it flips to the After image.
 
 Admin workflow:
 
 1. Create a project/address section.
 2. Select that project.
-3. Choose Before or After.
-4. Upload one or more images to that project section.
-5. Edit project details or individual image metadata when needed.
-6. Delete images individually, or delete the whole project.
+3. Upload a before image and an after image together.
+4. Add optional title, description, location, alt text, featured status, and display order.
+5. Edit project details or comparison metadata when needed.
+6. Replace the before image, replace the after image, delete a comparison, or delete the whole project.
 
 Project fields:
 
@@ -238,33 +240,36 @@ Project fields:
 
 Avoid publishing exact private customer addresses without permission. Use public labels such as `Leverington, Wisbech` where possible.
 
+Captions and text fields are optional so Albert can upload photos quickly from a phone.
+
 The dashboard uploads images to the public Supabase Storage bucket named `gallery`.
 
 Upload path format:
 
 ```text
-gallery/{project_id}/{timestamp}-{safe-file-name}
+gallery/{project_id}/comparisons/{timestamp}/before-{safe-file-name}
+gallery/{project_id}/comparisons/{timestamp}/after-{safe-file-name}
 ```
 
-The upload form accepts image files only and limits files to 5MB. After upload, it stores metadata in `gallery_images`:
+The upload form accepts image files only and limits files to 5MB. After upload, it stores metadata in `gallery_comparisons`:
 
 - project id
-- public image URL
-- storage path
-- title
+- before public image URL and storage path
+- after public image URL and storage path
+- optional title
 - description
-- phase: `before` or `after`
-- alt text
+- optional location
+- optional alt text
 - featured status
 - display order
 
-The public `/gallery` page fetches `gallery_projects` with nested `gallery_images`. Projects are ordered by `display_order` then `created_at`, and images are ordered by `display_order` then `created_at`. Each project displays Before and After sections when images exist for those phases. If both phases exist, the first before and first after image are shown together as a simple comparison block. If Supabase is missing, unreachable, or has no projects, grouped premium placeholder projects remain visible.
+The public `/gallery` page fetches `gallery_projects` with nested `gallery_comparisons`. Projects are ordered by `display_order` then `created_at`, and comparisons are ordered by `display_order` then `created_at`. Each comparison card shows the Before image on the front and flips to the After image when tapped or clicked. A fullscreen button opens a lightweight viewer with Before/After toggle buttons and zoom controls. If Supabase is missing, unreachable, or has no comparisons, premium placeholder flip cards remain visible.
 
 Deleting a project:
 
 - removes the related storage objects first where possible
 - deletes the project row
-- cascades related `gallery_images` rows through the database foreign key
+- cascades related `gallery_comparisons` rows through the database foreign key
 
 Common Supabase setup issues:
 
@@ -275,6 +280,7 @@ Common Supabase setup issues:
 - Storage path not starting with `gallery/`: upload policy will reject the file.
 - Missing `004_gallery_projects.sql`: dashboard project management and grouped public gallery will not work.
 - Missing `005_gallery_before_after.sql`: before/after image grouping will not work.
+- Missing `006_gallery_comparisons.sql`: before/after flip cards and paired uploads will not work.
 
 ### Gallery images not showing?
 
@@ -284,9 +290,9 @@ Check these in order:
 - The Supabase `gallery` bucket exists and is public.
 - Storage policies from `003_storage_policies.sql` were applied.
 - `gallery_projects` rows exist.
-- `gallery_images.project_id` points to an existing project.
-- `gallery_images.phase` is exactly `before` or `after`.
-- `gallery_images.image_url` is a full public URL, or `storage_path` points to a real file in the `gallery` bucket.
+- `gallery_comparisons.project_id` points to an existing project.
+- `gallery_comparisons.before_image_url` and `after_image_url` are full public URLs.
+- `gallery_comparisons.before_storage_path` and `after_storage_path` point to real files in the `gallery` bucket.
 - If using `next/image` in the future, add the Supabase storage domain to `next.config.ts`. The current gallery uses normal `<img>` tags to avoid remote image domain blocking.
 
 ## Deployment Checklist

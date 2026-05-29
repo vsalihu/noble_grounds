@@ -2,17 +2,17 @@
 
 import { useState } from "react";
 import { ImagePlus, Pencil, Trash2 } from "lucide-react";
+import { GalleryComparisonForm } from "@/components/admin/GalleryComparisonForm";
+import { GalleryComparisonManager } from "@/components/admin/GalleryComparisonManager";
 import { GalleryProjectForm } from "@/components/admin/GalleryProjectForm";
-import { ProjectImageManager } from "@/components/admin/ProjectImageManager";
-import { ProjectImageUploadForm } from "@/components/admin/ProjectImageUploadForm";
 import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
 import { galleryBucket } from "@/lib/gallery";
 import { supabase } from "@/lib/supabase/client";
-import type { GalleryProject, GalleryProjectWithImages } from "@/types/supabase";
+import type { GalleryProject, GalleryProjectWithComparisons } from "@/types/supabase";
 
 type GalleryProjectManagerProps = {
-  projects: GalleryProjectWithImages[];
+  projects: GalleryProjectWithComparisons[];
   selectedProjectId: string | null;
   onSelectProject: (projectId: string) => void;
   onChanged: () => Promise<void>;
@@ -31,20 +31,23 @@ export function GalleryProjectManager({
   const selectedProject =
     projects.find((project) => project.id === selectedProjectId) ?? projects[0] ?? null;
 
-  async function deleteProject(project: GalleryProjectWithImages) {
+  async function deleteProject(project: GalleryProjectWithComparisons) {
     if (!supabase) {
       setError("Supabase is not configured yet.");
       return;
     }
 
-    if (!window.confirm(`Delete "${project.title}" and all images in this project?`)) {
+    if (!window.confirm(`Delete "${project.title}" and every before/after pair?`)) {
       return;
     }
 
     setDeletingProjectId(project.id);
     setError("");
 
-    const paths = project.gallery_images.map((image) => image.storage_path);
+    const paths = project.gallery_comparisons.flatMap((comparison) => [
+      comparison.before_storage_path,
+      comparison.after_storage_path,
+    ]);
 
     if (paths.length > 0) {
       const { error: storageError } = await supabase.storage
@@ -80,8 +83,8 @@ export function GalleryProjectManager({
           Project sections
         </h2>
         <p className="mt-3 text-sm leading-7 text-noble-green-700">
-          Step 1: create or select the address/project. Step 2: add photos to
-          that project.
+          Step 1: create or select the address/project. Step 2: upload a
+          before/after pair. Step 3: manage or replace pairs.
         </p>
 
         {error ? (
@@ -114,11 +117,12 @@ export function GalleryProjectManager({
                     </h3>
                     <p className="mt-1 text-sm text-noble-green-700">
                       {project.address}
-                      {project.location ? ` • ${project.location}` : ""}
+                      {project.location ? ` / ${project.location}` : ""}
                     </p>
                     <p className="mt-2 text-sm text-sage-700">
-                      {project.customer_type ?? "No type"} • {project.gallery_images.length} image
-                      {project.gallery_images.length === 1 ? "" : "s"}
+                      {project.customer_type ?? "No type"} /{" "}
+                      {project.gallery_comparisons.length} comparison
+                      {project.gallery_comparisons.length === 1 ? "" : "s"}
                     </p>
                   </div>
                   {project.is_featured ? (
@@ -128,18 +132,41 @@ export function GalleryProjectManager({
                   ) : null}
                 </div>
                 <div className="mt-4 grid gap-2 min-[430px]:grid-cols-2">
-                  <Button type="button" variant="secondary" onClick={() => onSelectProject(project.id)}>
+                  <Button
+                    type="button"
+                    variant="secondary"
+                    onClick={() => {
+                      onSelectProject(project.id);
+                      setMode("upload");
+                    }}
+                  >
                     <ImagePlus className="mr-2 size-4" />
-                    Add images
+                    Add pair
                   </Button>
-                  <Button type="button" variant="secondary" onClick={() => { onSelectProject(project.id); setMode("manage"); }}>
-                    Manage images
+                  <Button
+                    type="button"
+                    variant="secondary"
+                    onClick={() => {
+                      onSelectProject(project.id);
+                      setMode("manage");
+                    }}
+                  >
+                    Manage pairs
                   </Button>
-                  <Button type="button" variant="secondary" onClick={() => setEditingProject(project)}>
+                  <Button
+                    type="button"
+                    variant="secondary"
+                    onClick={() => setEditingProject(project)}
+                  >
                     <Pencil className="mr-2 size-4" />
                     Edit project
                   </Button>
-                  <Button type="button" variant="secondary" onClick={() => void deleteProject(project)} disabled={deletingProjectId === project.id}>
+                  <Button
+                    type="button"
+                    variant="secondary"
+                    onClick={() => void deleteProject(project)}
+                    disabled={deletingProjectId === project.id}
+                  >
                     <Trash2 className="mr-2 size-4" />
                     {deletingProjectId === project.id ? "Deleting" : "Delete project"}
                   </Button>
@@ -172,19 +199,27 @@ export function GalleryProjectManager({
           <div className="flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
             <div>
               <h2 className="font-serif text-4xl font-semibold text-noble-green-950">
-                Project photos
+                Before/after pairs
               </h2>
               <p className="mt-3 text-sm leading-7 text-noble-green-700">
                 {selectedProject
                   ? `Selected: ${selectedProject.title}`
-                  : "Create a project before adding photos."}
+                  : "Create a project before adding comparisons."}
               </p>
             </div>
             <div className="flex gap-2">
-              <Button type="button" variant={mode === "upload" ? "primary" : "secondary"} onClick={() => setMode("upload")}>
+              <Button
+                type="button"
+                variant={mode === "upload" ? "primary" : "secondary"}
+                onClick={() => setMode("upload")}
+              >
                 Add
               </Button>
-              <Button type="button" variant={mode === "manage" ? "primary" : "secondary"} onClick={() => setMode("manage")}>
+              <Button
+                type="button"
+                variant={mode === "manage" ? "primary" : "secondary"}
+                onClick={() => setMode("manage")}
+              >
                 Manage
               </Button>
             </div>
@@ -196,9 +231,13 @@ export function GalleryProjectManager({
                 No project selected.
               </div>
             ) : mode === "upload" ? (
-              <ProjectImageUploadForm project={selectedProject} onUploaded={onChanged} />
+              <GalleryComparisonForm project={selectedProject} onSaved={onChanged} />
             ) : (
-              <ProjectImageManager images={selectedProject.gallery_images} onChanged={onChanged} />
+              <GalleryComparisonManager
+                project={selectedProject}
+                comparisons={selectedProject.gallery_comparisons}
+                onChanged={onChanged}
+              />
             )}
           </div>
         </Card>

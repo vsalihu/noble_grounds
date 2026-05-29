@@ -9,12 +9,12 @@ import { Container } from "@/components/layout/Container";
 import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
 import { supabase } from "@/lib/supabase/client";
-import type { GalleryProjectWithImages } from "@/types/supabase";
+import type { GalleryProjectWithComparisons } from "@/types/supabase";
 
 export function AdminDashboardShell() {
   const router = useRouter();
   const [user, setUser] = useState<User | null>(null);
-  const [projects, setProjects] = useState<GalleryProjectWithImages[]>([]);
+  const [projects, setProjects] = useState<GalleryProjectWithComparisons[]>([]);
   const [selectedProjectId, setSelectedProjectId] = useState<string | null>(null);
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(true);
@@ -26,7 +26,7 @@ export function AdminDashboardShell() {
 
     const { data, error: fetchError } = await supabase
       .from("gallery_projects")
-      .select("*, gallery_images(*)")
+      .select("*, gallery_comparisons(*)")
       .order("display_order", { ascending: true })
       .order("created_at", { ascending: false });
 
@@ -35,10 +35,10 @@ export function AdminDashboardShell() {
       return;
     }
 
-    const nextProjects = ((data ?? []) as GalleryProjectWithImages[]).map(
+    const nextProjects = ((data ?? []) as GalleryProjectWithComparisons[]).map(
       (project) => ({
         ...project,
-        gallery_images: [...(project.gallery_images ?? [])].sort((a, b) => {
+        gallery_comparisons: [...(project.gallery_comparisons ?? [])].sort((a, b) => {
           if (a.display_order !== b.display_order) {
             return a.display_order - b.display_order;
           }
