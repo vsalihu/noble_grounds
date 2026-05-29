@@ -2,10 +2,12 @@ import { MapPin, ShieldCheck, Sparkles } from "lucide-react";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { Container } from "@/components/layout/Container";
 import { Section } from "@/components/layout/Section";
-import { Card } from "@/components/ui/Card";
-import { FadeIn } from "@/components/ui/FadeIn";
+import { GlassCard } from "@/components/ui/GlassCard";
 import { PageHero } from "@/components/sections/PageHero";
 import { QuoteBand } from "@/components/sections/QuoteBand";
+import { AnimatedProcess } from "@/components/sections/AnimatedProcess";
+import { ServiceAreaShowcase } from "@/components/sections/ServiceAreaShowcase";
+import { ScrollReveal } from "@/components/sections/ScrollReveal";
 import { breadcrumbJsonLd, createMetadata } from "@/lib/seo";
 
 export const metadata = createMetadata({
@@ -57,16 +59,26 @@ export default function AboutPage() {
       </PageHero>
       <Section className="pt-0">
         <Container className="grid gap-6 lg:grid-cols-[0.95fr_1.05fr]">
-          <FadeIn>
-            <div className="min-h-96 rounded-lg border border-border-soft bg-[linear-gradient(145deg,#123226,#697a58_58%,#fbf8f1)] shadow-[var(--shadow-lifted)]" />
-          </FadeIn>
+          <ScrollReveal>
+            <div className="relative min-h-96 overflow-hidden rounded-2xl border border-border-soft bg-[linear-gradient(145deg,#071710,#123226_52%,#697a58)] shadow-[var(--shadow-lifted)]">
+              <div className="absolute inset-8 rounded-2xl border border-ivory/15" />
+              <div className="absolute bottom-6 left-6 right-6 rounded-xl border border-ivory/15 bg-ivory/12 p-5 text-ivory backdrop-blur">
+                <p className="text-xs font-semibold uppercase tracking-[0.16em] text-sage-200">
+                  Leverington based
+                </p>
+                <p className="mt-2 font-serif text-4xl font-semibold leading-none">
+                  Local work, premium presentation.
+                </p>
+              </div>
+            </div>
+          </ScrollReveal>
           <div className="grid gap-4">
             {values.map((value, index) => {
               const Icon = value.icon;
 
               return (
-                <FadeIn key={value.title} delay={index * 0.05}>
-                  <Card className="p-5">
+                <ScrollReveal key={value.title} delay={index * 0.05}>
+                  <GlassCard className="p-6">
                     <Icon className="size-7 text-earth-700" />
                     <h2 className="mt-5 font-serif text-3xl font-semibold text-noble-green-950">
                       {value.title}
@@ -74,13 +86,15 @@ export default function AboutPage() {
                     <p className="mt-3 text-sm leading-7 text-noble-green-700">
                       {value.text}
                     </p>
-                  </Card>
-                </FadeIn>
+                  </GlassCard>
+                </ScrollReveal>
               );
             })}
           </div>
         </Container>
       </Section>
+      <AnimatedProcess title="A clear process for a cleaner result." />
+      <ServiceAreaShowcase />
       <QuoteBand />
     </main>
   );

@@ -2,11 +2,11 @@ import { Mail, MessageCircle, Phone } from "lucide-react";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { Container } from "@/components/layout/Container";
 import { Section } from "@/components/layout/Section";
-import { Card } from "@/components/ui/Card";
+import { GlassCard } from "@/components/ui/GlassCard";
 import { Button } from "@/components/ui/Button";
-import { FadeIn } from "@/components/ui/FadeIn";
 import { PageHero } from "@/components/sections/PageHero";
 import { QuoteForm } from "@/components/sections/QuoteForm";
+import { ScrollReveal } from "@/components/sections/ScrollReveal";
 import { siteConfig } from "@/data/site";
 import { breadcrumbJsonLd, createMetadata } from "@/lib/seo";
 
@@ -69,8 +69,8 @@ export default function ContactPage() {
               const Icon = card.icon;
 
               return (
-                <FadeIn key={card.title} delay={index * 0.04}>
-                  <Card className="p-5">
+                <ScrollReveal key={card.title} delay={index * 0.04}>
+                  <GlassCard className="group p-6 transition duration-300 hover:-translate-y-1">
                     <Icon className="size-7 text-earth-700" />
                     <h2 className="mt-5 font-serif text-3xl font-semibold text-noble-green-950">
                       {card.title}
@@ -81,14 +81,14 @@ export default function ContactPage() {
                     <Button href={card.href} variant="secondary" className="mt-5">
                       {card.action}
                     </Button>
-                  </Card>
-                </FadeIn>
+                  </GlassCard>
+                </ScrollReveal>
               );
             })}
           </div>
 
-          <FadeIn delay={0.08}>
-            <Card className="p-5 md:p-6">
+          <ScrollReveal delay={0.08}>
+            <GlassCard className="p-5 md:p-7">
               <h2 className="font-serif text-4xl font-semibold text-noble-green-950">
                 Quote request
               </h2>
@@ -99,8 +99,8 @@ export default function ContactPage() {
               <div className="mt-6">
                 <QuoteForm />
               </div>
-            </Card>
-          </FadeIn>
+            </GlassCard>
+          </ScrollReveal>
         </Container>
       </Section>
     </main>

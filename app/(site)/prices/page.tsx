@@ -1,11 +1,12 @@
 import { Accessibility, CalendarDays, Leaf, Ruler, Trash2 } from "lucide-react";
 import { JsonLd } from "@/components/seo/JsonLd";
-import { Card } from "@/components/ui/Card";
-import { FadeIn } from "@/components/ui/FadeIn";
+import { GlassCard } from "@/components/ui/GlassCard";
 import { Container } from "@/components/layout/Container";
 import { Section } from "@/components/layout/Section";
 import { PageHero } from "@/components/sections/PageHero";
 import { QuoteBand } from "@/components/sections/QuoteBand";
+import { ScrollReveal } from "@/components/sections/ScrollReveal";
+import { AnimatedDivider } from "@/components/ui/AnimatedDivider";
 import { breadcrumbJsonLd, createMetadata } from "@/lib/seo";
 
 export const metadata = createMetadata({
@@ -47,13 +48,29 @@ export default function PricesPage() {
       </PageHero>
       <Section className="pt-0">
         <Container>
+          <ScrollReveal>
+            <div className="rounded-2xl bg-noble-green-900 p-6 text-ivory shadow-[var(--shadow-lifted)] md:p-9">
+              <p className="text-sm font-semibold uppercase tracking-[0.16em] text-sage-200">
+                Why no fixed price list?
+              </p>
+              <h2 className="mt-3 max-w-3xl font-serif text-5xl font-semibold leading-[0.98] md:text-6xl">
+                Every lawn has its own access, condition and finish level.
+              </h2>
+              <p className="mt-5 max-w-2xl text-sm leading-7 text-sage-200">
+                A quick fixed price often ignores the details that decide the
+                actual job: gates, grass height, edging, parking, frequency and
+                how cuttings are handled.
+              </p>
+            </div>
+          </ScrollReveal>
+          <AnimatedDivider className="my-9" />
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-5">
             {factors.map((factor, index) => {
               const Icon = factor.icon;
 
               return (
-                <FadeIn key={factor.title} delay={index * 0.04}>
-                  <Card className="h-full p-5">
+                <ScrollReveal key={factor.title} delay={index * 0.04}>
+                  <GlassCard className="h-full p-5">
                     <Icon className="size-7 text-earth-700" />
                     <h2 className="mt-5 font-serif text-3xl font-semibold text-noble-green-950">
                       {factor.title}
@@ -61,8 +78,8 @@ export default function PricesPage() {
                     <p className="mt-3 text-sm leading-7 text-noble-green-700">
                       {factor.text}
                     </p>
-                  </Card>
-                </FadeIn>
+                  </GlassCard>
+                </ScrollReveal>
               );
             })}
           </div>

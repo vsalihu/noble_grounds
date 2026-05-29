@@ -1,6 +1,6 @@
 import { MapPin } from "lucide-react";
 import { GalleryComparisonCard } from "@/components/gallery/GalleryComparisonCard";
-import { Card } from "@/components/ui/Card";
+import { GlassCard } from "@/components/ui/GlassCard";
 import type { GalleryProjectWithComparisons } from "@/types/supabase";
 
 export function GalleryProjectCard({
@@ -9,7 +9,7 @@ export function GalleryProjectCard({
   project: GalleryProjectWithComparisons;
 }) {
   return (
-    <Card className="overflow-hidden p-5 md:p-6">
+    <GlassCard className="overflow-hidden p-5 md:p-7">
       <div>
         <div className="flex flex-wrap items-center gap-2">
           {project.is_featured ? (
@@ -58,6 +58,6 @@ export function GalleryProjectCard({
           </div>
         )}
       </div>
-    </Card>
+    </GlassCard>
   );
 }

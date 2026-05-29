@@ -1,11 +1,13 @@
 import { Building2, CalendarCheck, Home, KeyRound, Scissors, Store } from "lucide-react";
 import { JsonLd } from "@/components/seo/JsonLd";
-import { Card } from "@/components/ui/Card";
-import { FadeIn } from "@/components/ui/FadeIn";
+import { GlassCard } from "@/components/ui/GlassCard";
 import { Container } from "@/components/layout/Container";
 import { Section } from "@/components/layout/Section";
 import { PageHero } from "@/components/sections/PageHero";
 import { QuoteBand } from "@/components/sections/QuoteBand";
+import { AnimatedProcess } from "@/components/sections/AnimatedProcess";
+import { WhoWeHelp } from "@/components/sections/WhoWeHelp";
+import { ScrollReveal } from "@/components/sections/ScrollReveal";
 import { breadcrumbJsonLd, createMetadata } from "@/lib/seo";
 
 export const metadata = createMetadata({
@@ -71,14 +73,29 @@ export default function ServicesPage() {
         with a clean finish, reliable communication, and a professional standard.
       </PageHero>
       <Section className="pt-0">
-        <Container>
-          <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+        <Container className="grid gap-8 lg:grid-cols-[0.72fr_1.28fr]">
+          <ScrollReveal className="lg:sticky lg:top-28 lg:self-start">
+            <GlassCard className="p-6">
+              <p className="text-sm font-semibold uppercase tracking-[0.16em] text-sage-700">
+                Service focus
+              </p>
+              <h2 className="mt-3 font-serif text-5xl font-semibold leading-none text-noble-green-950">
+                Mowing built around presentation.
+              </h2>
+              <p className="mt-5 text-sm leading-7 text-noble-green-700">
+                Residential, rental, business and estate-agent lawns all need a
+                different level of timing, access and finish. The service stays
+                focused on clean mowing and practical communication.
+              </p>
+            </GlassCard>
+          </ScrollReveal>
+          <div className="grid gap-4 md:grid-cols-2">
             {services.map((service, index) => {
               const Icon = service.icon;
 
               return (
-                <FadeIn key={service.title} delay={index * 0.04}>
-                  <Card className="group h-full p-5 transition duration-200 hover:-translate-y-1 hover:shadow-[0_24px_60px_rgb(22_38_30_/_0.12)]">
+                <ScrollReveal key={service.title} delay={index * 0.04}>
+                  <GlassCard className="group h-full p-6 transition duration-300 hover:-translate-y-1 hover:shadow-[0_28px_80px_rgb(18_50_38_/_0.15)]">
                     <div className="flex size-12 items-center justify-center rounded-md bg-noble-green-800 text-ivory">
                       <Icon className="size-5" />
                     </div>
@@ -88,13 +105,16 @@ export default function ServicesPage() {
                     <p className="mt-4 text-sm leading-7 text-noble-green-700">
                       {service.text}
                     </p>
-                  </Card>
-                </FadeIn>
+                    <div className="mt-6 h-24 rounded-xl border border-earth-200 bg-[linear-gradient(135deg,rgb(220_228_207_/_0.86),rgb(255_253_247_/_0.92),rgb(183_150_115_/_0.22))]" />
+                  </GlassCard>
+                </ScrollReveal>
               );
             })}
           </div>
         </Container>
       </Section>
+      <WhoWeHelp />
+      <AnimatedProcess title="From enquiry to a cleaner finish." />
       <QuoteBand title="Request a mowing quote" />
     </main>
   );

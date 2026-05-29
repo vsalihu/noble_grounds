@@ -3,6 +3,8 @@ import { Container } from "@/components/layout/Container";
 import { Section } from "@/components/layout/Section";
 import { PageHero } from "@/components/sections/PageHero";
 import { GalleryProjectGrid } from "@/components/gallery/GalleryProjectGrid";
+import { ScrollReveal } from "@/components/sections/ScrollReveal";
+import { TrustHighlights } from "@/components/sections/TrustHighlights";
 import { fetchGalleryProjectsWithComparisons } from "@/lib/gallery";
 import { breadcrumbJsonLd, createMetadata } from "@/lib/seo";
 import type { GalleryProjectWithComparisons } from "@/types/supabase";
@@ -106,9 +108,12 @@ export default async function GalleryPage() {
       </PageHero>
       <Section className="pt-0">
         <Container>
-          <GalleryProjectGrid projects={visibleProjects} />
+          <ScrollReveal>
+            <GalleryProjectGrid projects={visibleProjects} />
+          </ScrollReveal>
         </Container>
       </Section>
+      <TrustHighlights />
     </main>
   );
 }

@@ -2,10 +2,10 @@ import { Quote, Star } from "lucide-react";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { Container } from "@/components/layout/Container";
 import { Section } from "@/components/layout/Section";
-import { Card } from "@/components/ui/Card";
-import { FadeIn } from "@/components/ui/FadeIn";
+import { GlassCard } from "@/components/ui/GlassCard";
 import { PageHero } from "@/components/sections/PageHero";
 import { QuoteBand } from "@/components/sections/QuoteBand";
+import { ScrollReveal } from "@/components/sections/ScrollReveal";
 import { breadcrumbJsonLd, createMetadata } from "@/lib/seo";
 
 export const metadata = createMetadata({
@@ -60,8 +60,8 @@ export default function ReviewsPage() {
         <Container>
           <div className="grid gap-4 md:grid-cols-2">
             {reviews.map((review, index) => (
-              <FadeIn key={review.name} delay={index * 0.04}>
-                <Card className="h-full p-5">
+              <ScrollReveal key={review.name} delay={index * 0.04}>
+                <GlassCard className="h-full p-6">
                   <div className="flex items-center justify-between gap-4">
                     <Quote className="size-8 text-earth-700" />
                     <div className="flex gap-1 text-sage-700">
@@ -76,8 +76,8 @@ export default function ReviewsPage() {
                   <p className="mt-6 text-sm font-semibold text-noble-green-950">
                     {review.name}
                   </p>
-                </Card>
-              </FadeIn>
+                </GlassCard>
+              </ScrollReveal>
             ))}
           </div>
         </Container>

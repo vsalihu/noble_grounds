@@ -63,7 +63,7 @@ export function GalleryComparisonCard({
           role="button"
           tabIndex={0}
           aria-label={`${comparison.title || "Before and after comparison"}. Tap to reveal the after result.`}
-          className="relative aspect-[4/3] cursor-pointer overflow-hidden rounded-lg border border-border-soft bg-sage-100 shadow-soft outline-none transition focus-visible:ring-2 focus-visible:ring-sage-500 focus-visible:ring-offset-2 focus-visible:ring-offset-cream"
+          className="relative aspect-[4/3] cursor-pointer overflow-hidden rounded-2xl border border-border-soft bg-sage-100 shadow-[0_18px_50px_rgb(22_38_30_/_0.12)] outline-none transition duration-300 hover:-translate-y-1 hover:shadow-[0_26px_70px_rgb(18_50_38_/_0.18)] focus-visible:ring-2 focus-visible:ring-sage-500 focus-visible:ring-offset-2 focus-visible:ring-offset-cream"
           style={{ perspective: 1200 }}
           onClick={() => setIsFlipped((current) => !current)}
           onKeyDown={(event) => {
@@ -102,7 +102,7 @@ export function GalleryComparisonCard({
 
           <button
             type="button"
-            className="absolute right-3 top-3 z-20 inline-flex size-11 items-center justify-center rounded-md border border-ivory/70 bg-ivory/90 text-noble-green-900 shadow-soft transition hover:bg-white focus:outline-none focus-visible:ring-2 focus-visible:ring-sage-500"
+            className="absolute right-3 top-3 z-20 inline-flex size-11 items-center justify-center rounded-md border border-ivory/70 bg-ivory/90 text-noble-green-900 shadow-soft backdrop-blur transition hover:bg-white focus:outline-none focus-visible:ring-2 focus-visible:ring-sage-500"
             aria-label={`Open ${activeSide} image fullscreen`}
             onClick={(event) => {
               event.stopPropagation();
@@ -241,7 +241,7 @@ function ImageFace({
           aria-label={alt}
         />
       )}
-      <span className="absolute left-3 top-3 rounded-md bg-ivory/90 px-3 py-1 text-xs font-semibold uppercase tracking-[0.12em] text-noble-green-900 shadow-soft">
+      <span className="absolute left-3 top-3 rounded-md bg-ivory/90 px-3 py-1 text-xs font-semibold uppercase tracking-[0.12em] text-noble-green-900 shadow-soft backdrop-blur">
         {label}
       </span>
     </div>

@@ -4,6 +4,9 @@ import { Section } from "@/components/layout/Section";
 import { FaqAccordion } from "@/components/sections/FaqAccordion";
 import { PageHero } from "@/components/sections/PageHero";
 import { QuoteBand } from "@/components/sections/QuoteBand";
+import { ScrollReveal } from "@/components/sections/ScrollReveal";
+import { GlassCard } from "@/components/ui/GlassCard";
+import { Button } from "@/components/ui/Button";
 import { breadcrumbJsonLd, createMetadata, faqJsonLd } from "@/lib/seo";
 
 export const metadata = createMetadata({
@@ -91,8 +94,27 @@ export default function FaqPage() {
         Wisbech, regular schedules, one-off cuts, and property presentation.
       </PageHero>
       <Section className="pt-0">
-        <Container className="max-w-4xl">
-          <FaqAccordion items={faqs} />
+        <Container className="grid gap-8 lg:grid-cols-[0.72fr_1.28fr]">
+          <ScrollReveal>
+            <GlassCard className="lg:sticky lg:top-28 p-6">
+              <p className="text-sm font-semibold uppercase tracking-[0.16em] text-sage-700">
+                Before you book
+              </p>
+              <h2 className="mt-3 font-serif text-5xl font-semibold leading-none text-noble-green-950">
+                Quote-first, not booking-first.
+              </h2>
+              <p className="mt-5 text-sm leading-7 text-noble-green-700">
+                If you are unsure, send the address area and photos. It is the
+                quickest way to understand lawn size, access and condition.
+              </p>
+              <Button href="/contact" className="mt-6">
+                Request Quote
+              </Button>
+            </GlassCard>
+          </ScrollReveal>
+          <ScrollReveal>
+            <FaqAccordion items={faqs} />
+          </ScrollReveal>
         </Container>
       </Section>
       <QuoteBand />
