@@ -50,8 +50,10 @@ export function MobileCtaBar() {
                   : "border-border-soft bg-ivory text-noble-green-900",
               ].join(" ")}
             >
-              <Icon className="size-4" aria-hidden="true" />
-              {action.label}
+              <span className="button-premium-label flex-col gap-1">
+                <Icon className="size-4" aria-hidden="true" />
+                {action.label}
+              </span>
             </Link>
           );
         })}

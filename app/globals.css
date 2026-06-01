@@ -151,17 +151,26 @@ main {
   isolation: isolate;
 }
 
-.button-premium svg:last-child {
+.button-premium-label {
+  position: relative;
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.button-premium-label svg:last-child {
   transition: transform 180ms ease;
 }
 
-.button-premium:hover svg:last-child {
+.button-premium:hover .button-premium-label svg:last-child {
   transform: translateX(0.16rem);
 }
 
 .button-grass {
   border: 1px solid rgb(220 228 207 / 0.14);
   border-radius: 0.8rem;
+  color: #fffdf7 !important;
   isolation: isolate;
   overflow: hidden !important;
   background-image:
@@ -210,9 +219,9 @@ main {
   background-position: 120% 0, 0 0;
 }
 
-.button-grass > * {
-  position: relative;
-  z-index: 1;
+.button-grass .button-premium-label {
+  color: #fffdf7;
+  text-shadow: 0 1px 1px rgb(7 23 16 / 0.32);
 }
 
 ::selection {

@@ -57,7 +57,7 @@ export function Button({
 
     return (
       <Link className={classes} {...linkProps}>
-        {children}
+        <span className="button-premium-label">{children}</span>
       </Link>
     );
   }
@@ -67,7 +67,7 @@ export function Button({
 
   return (
     <button className={classes} type={type} {...buttonProps}>
-      {children}
+      <span className="button-premium-label">{children}</span>
     </button>
   );
 }
