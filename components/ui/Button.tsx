@@ -33,7 +33,7 @@ const variants: Record<ButtonVariant, string> = {
   danger:
     "border border-earth-700/35 bg-ivory text-earth-700 shadow-[0_10px_28px_rgb(128_100_71_/_0.08)] hover:-translate-y-0.5 hover:border-earth-700 hover:bg-earth-700 hover:text-ivory hover:shadow-[0_16px_36px_rgb(128_100_71_/_0.16)]",
   grass:
-    "button-grass overflow-visible bg-noble-green-900 text-ivory shadow-[0_18px_44px_rgb(7_23_16_/_0.28)] hover:-translate-y-0.5 hover:bg-noble-green-950 hover:text-white hover:shadow-[0_24px_60px_rgb(7_23_16_/_0.34)]",
+    "button-grass bg-noble-green-900 text-ivory shadow-[0_18px_44px_rgb(7_23_16_/_0.28)] hover:-translate-y-0.5 hover:bg-noble-green-950 hover:text-white hover:shadow-[0_24px_60px_rgb(7_23_16_/_0.34)]",
 };
 
 export function Button({
