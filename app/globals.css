@@ -157,6 +157,7 @@ main {
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  color: inherit;
 }
 
 .button-premium-label svg:last-child {
@@ -165,6 +166,37 @@ main {
 
 .button-premium:hover .button-premium-label svg:last-child {
   transform: translateX(0.16rem);
+}
+
+.button-variant-primary,
+.button-variant-primary:hover,
+.button-variant-primary:focus,
+.button-variant-primary:disabled,
+.button-variant-grass,
+.button-variant-grass:hover,
+.button-variant-grass:focus,
+.button-variant-grass:disabled {
+  color: #fffdf7 !important;
+}
+
+.button-variant-primary .button-premium-label,
+.button-variant-primary .button-premium-label *,
+.button-variant-grass .button-premium-label,
+.button-variant-grass .button-premium-label * {
+  color: #fffdf7 !important;
+  stroke: currentColor;
+}
+
+.button-variant-secondary,
+.button-variant-secondary:hover,
+.button-variant-secondary:focus {
+  color: #0b2118 !important;
+}
+
+.button-variant-secondary .button-premium-label,
+.button-variant-secondary .button-premium-label * {
+  color: #0b2118 !important;
+  stroke: currentColor;
 }
 
 .button-grass {
@@ -220,7 +252,7 @@ main {
 }
 
 .button-grass .button-premium-label {
-  color: #fffdf7;
+  color: #fffdf7 !important;
   text-shadow: 0 1px 1px rgb(7 23 16 / 0.32);
 }
 

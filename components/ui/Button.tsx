@@ -43,7 +43,8 @@ export function Button({
   ...props
 }: ButtonProps) {
   const classes = [
-    "button-premium relative inline-flex min-h-12 w-full items-center justify-center rounded-md px-5 py-3 text-center text-sm font-semibold transition duration-200 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sage-500 focus-visible:ring-offset-2 focus-visible:ring-offset-cream active:translate-y-0 active:scale-[0.98] min-[430px]:w-auto",
+    "button-premium relative inline-flex min-h-12 w-full items-center justify-center rounded-md px-5 py-3 text-center text-sm font-semibold transition duration-200 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sage-500 focus-visible:ring-offset-2 focus-visible:ring-offset-cream active:translate-y-0 active:scale-[0.98] disabled:cursor-not-allowed disabled:saturate-75 min-[430px]:w-auto",
+    `button-variant-${variant}`,
     variants[variant],
     className,
   ]
