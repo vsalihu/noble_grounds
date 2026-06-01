@@ -37,12 +37,18 @@ export function MobileCtaBar() {
       <div className="mx-auto grid max-w-md grid-cols-3 gap-2">
         {actions.map((action) => {
           const Icon = action.icon;
+          const isQuote = action.label === "Quote";
 
           return (
             <Link
               key={action.label}
               href={action.href}
-              className="flex min-h-14 flex-col items-center justify-center gap-1 rounded-md border border-border-soft bg-ivory px-2 text-xs font-semibold text-noble-green-900 shadow-[0_10px_28px_rgb(22_38_30_/_0.08)] transition active:scale-[0.98]"
+              className={[
+                "flex min-h-14 flex-col items-center justify-center gap-1 rounded-md border px-2 text-xs font-semibold shadow-[0_10px_28px_rgb(22_38_30_/_0.08)] transition active:scale-[0.98] focus:outline-none focus-visible:ring-2 focus-visible:ring-sage-500",
+                isQuote
+                  ? "button-grass border-noble-green-950 bg-noble-green-900 text-ivory"
+                  : "border-border-soft bg-ivory text-noble-green-900",
+              ].join(" ")}
             >
               <Icon className="size-4" aria-hidden="true" />
               {action.label}

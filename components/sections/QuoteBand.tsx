@@ -27,7 +27,8 @@ export function QuoteBand({
             </div>
             <Button
               href="/contact"
-              className="relative mt-6 bg-ivory text-noble-green-900 hover:bg-cream md:mt-0"
+              variant="grass"
+              className="relative mt-6 md:mt-0"
             >
               Request a Quote
               <ArrowRight className="ml-2 size-4" />

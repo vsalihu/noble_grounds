@@ -189,7 +189,7 @@ export function ProjectImageManager({
               </Button>
               <Button
                 type="button"
-                variant="secondary"
+                variant="danger"
                 onClick={() => void deleteImage(image)}
                 disabled={deletingId === image.id}
               >

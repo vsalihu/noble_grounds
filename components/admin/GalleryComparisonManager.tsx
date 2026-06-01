@@ -224,7 +224,7 @@ export function GalleryComparisonManager({
                 </Button>
                 <Button
                   type="button"
-                  variant="secondary"
+                  variant="danger"
                   onClick={() => void handleDelete(comparison)}
                   disabled={deletingId === comparison.id}
                 >

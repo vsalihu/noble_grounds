@@ -107,7 +107,7 @@ export default function FaqPage() {
                 If you are unsure, send the address area and photos. It is the
                 quickest way to understand lawn size, access and condition.
               </p>
-              <Button href="/contact" className="mt-6">
+              <Button href="/contact" variant="grass" className="mt-6">
                 Request Quote
               </Button>
             </GlassCard>

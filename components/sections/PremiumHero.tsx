@@ -24,7 +24,7 @@ export function PremiumHero() {
           </p>
 
           <div className="mt-8 flex flex-col gap-3 min-[430px]:flex-row">
-            <Button href="/contact">
+            <Button href="/contact" variant="grass">
               Request a Quote
               <ArrowRight className="ml-2 size-4" aria-hidden="true" />
             </Button>

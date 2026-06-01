@@ -71,7 +71,7 @@ export function ProjectWorkspace({
             </Button>
             <Button
               type="button"
-              variant="secondary"
+              variant="danger"
               onClick={onDelete}
               disabled={isDeleting}
             >

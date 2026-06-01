@@ -54,7 +54,7 @@ export function ProjectCard({
         </Button>
         <Button
           type="button"
-          variant="secondary"
+          variant="danger"
           onClick={onDelete}
           disabled={isDeleting}
         >

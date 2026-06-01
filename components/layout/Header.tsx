@@ -63,7 +63,7 @@ export function Header() {
         </nav>
 
         <div className="hidden items-center gap-3 md:flex">
-          <Button href="/contact" className="min-h-11 px-4">
+          <Button href="/contact" variant="grass" className="min-h-11 px-4">
             Request Quote
           </Button>
         </div>
@@ -122,7 +122,7 @@ export function Header() {
                 })}
               </nav>
 
-              <Button href="/contact" className="mt-4" onClick={closeMenu}>
+              <Button href="/contact" variant="grass" className="mt-4" onClick={closeMenu}>
                 Request Quote
               </Button>
             </Container>

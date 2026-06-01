@@ -286,7 +286,7 @@ export function QuoteForm() {
         />
       </label>
 
-      <Button type="submit" className="mt-1" disabled={isSubmitting}>
+      <Button type="submit" variant="grass" className="mt-1" disabled={isSubmitting}>
         {isSubmitting ? (
           <>
             <Loader2 className="mr-2 size-4 animate-spin" />

@@ -147,6 +147,81 @@ main {
   mask-image: linear-gradient(to right, transparent, black 8%, black 92%, transparent);
 }
 
+.button-premium {
+  isolation: isolate;
+}
+
+.button-premium svg:last-child {
+  transition: transform 180ms ease;
+}
+
+.button-premium:hover svg:last-child {
+  transform: translateX(0.16rem);
+}
+
+.button-grass {
+  border-radius: 0.72rem;
+  isolation: isolate;
+}
+
+.button-grass::before,
+.button-grass::after {
+  position: absolute;
+  left: 14%;
+  top: -0.34rem;
+  z-index: 0;
+  width: 72%;
+  height: 0.8rem;
+  pointer-events: none;
+  content: "";
+  opacity: 0.82;
+  background:
+    linear-gradient(102deg, transparent 0 5%, #9aaa83 5% 7%, transparent 7% 15%),
+    linear-gradient(76deg, transparent 0 16%, #dce4cf 16% 18%, transparent 18% 27%),
+    linear-gradient(98deg, transparent 0 31%, #9aaa83 31% 33%, transparent 33% 44%),
+    linear-gradient(72deg, transparent 0 49%, #dce4cf 49% 51%, transparent 51% 62%),
+    linear-gradient(106deg, transparent 0 67%, #9aaa83 67% 69%, transparent 69% 82%),
+    linear-gradient(82deg, transparent 0 88%, #dce4cf 88% 90%, transparent 90% 100%);
+  transform-origin: bottom center;
+  transition: transform 220ms ease, opacity 220ms ease;
+}
+
+.button-grass::after {
+  left: 22%;
+  top: -0.22rem;
+  width: 58%;
+  opacity: 0.42;
+  filter: blur(0.2px);
+  transform: scaleY(0.78);
+}
+
+.button-grass:hover::before {
+  opacity: 0.95;
+  transform: translateY(-0.05rem) scaleY(1.08) skewX(-2deg);
+}
+
+.button-grass:hover::after {
+  opacity: 0.58;
+  transform: translateY(-0.03rem) scaleY(0.9) skewX(2deg);
+}
+
+.button-grass > * {
+  position: relative;
+  z-index: 1;
+}
+
+.button-grass {
+  background-image:
+    linear-gradient(120deg, transparent, rgb(255 253 247 / 0.16), transparent),
+    linear-gradient(180deg, #123226, #071710);
+  background-size: 220% 100%, 100% 100%;
+  background-position: -120% 0, 0 0;
+}
+
+.button-grass:hover {
+  background-position: 120% 0, 0 0;
+}
+
 ::selection {
   background: #9aaa83;
   color: #0b2118;
