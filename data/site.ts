@@ -5,9 +5,9 @@ export const siteConfig = {
   service: "premium grass mowing",
   serviceDescription:
     "Premium grass mowing and lawn presentation for homeowners, landlords, businesses, and estate agents around Leverington and Wisbech.",
-  email: "hello@noblegrounds.co.uk",
-  phone: "+440000000000",
-  whatsapp: "+440000000000",
+  email: "viktor.salihu2017@gmail.com",
+  phone: "+44 7881 702750",
+  whatsapp: "+44 7881 702750",
   ogImage: "/images/og-noble-grounds.svg",
   locale: "en_GB",
   audiences: ["homeowners", "landlords", "businesses", "estate agents"],

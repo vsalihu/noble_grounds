@@ -4,6 +4,7 @@ import { FormEvent, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Loader2, LockKeyhole } from "lucide-react";
 import { Button } from "@/components/ui/Button";
+import { trackAdminLogin } from "@/lib/analytics";
 import { supabase } from "@/lib/supabase/client";
 
 const inputClass =
@@ -45,6 +46,7 @@ export function AdminLoginForm() {
       return;
     }
 
+    trackAdminLogin();
     router.push("/dashboard");
     router.refresh();
   }

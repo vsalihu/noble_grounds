@@ -8,7 +8,7 @@ import { siteConfig } from "@/data/site";
 const actions = [
   {
     label: "Call",
-    href: `tel:${siteConfig.phone}`,
+    href: `tel:${siteConfig.phone.replace(/\s/g, "")}`,
     icon: Phone,
   },
   {

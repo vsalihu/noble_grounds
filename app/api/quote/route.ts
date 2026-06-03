@@ -1,12 +1,29 @@
 import { NextResponse } from "next/server";
-import { saveQuoteEnquiry, sendQuoteNotificationEmail } from "@/lib/contact";
+import {
+  saveQuoteEnquiry,
+  sendQuoteNotificationEmail,
+  uploadQuotePhotos,
+} from "@/lib/contact";
 import { validateQuotePayload } from "@/lib/validation";
 
 export async function POST(request: Request) {
   let body: unknown;
+  let files: File[] = [];
 
   try {
-    body = await request.json();
+    const contentType = request.headers.get("content-type") ?? "";
+
+    if (contentType.includes("multipart/form-data")) {
+      const formData = await request.formData();
+      body = Object.fromEntries(
+        Array.from(formData.entries()).filter(([, value]) => typeof value === "string"),
+      );
+      files = formData
+        .getAll("photos")
+        .filter((value): value is File => value instanceof File && value.size > 0);
+    } else {
+      body = await request.json();
+    }
   } catch {
     return NextResponse.json(
       {
@@ -41,9 +58,23 @@ export async function POST(request: Request) {
   }
 
   try {
+    const photoResult = await uploadQuotePhotos(files);
+
+    if (photoResult.error) {
+      return NextResponse.json(
+        {
+          ok: false,
+          errors: {
+            form: photoResult.error,
+          },
+        },
+        { status: 422 },
+      );
+    }
+
     const [saveResult, emailResult] = await Promise.all([
-      saveQuoteEnquiry(result.data),
-      sendQuoteNotificationEmail(result.data),
+      saveQuoteEnquiry(result.data, photoResult.photos),
+      sendQuoteNotificationEmail(result.data, photoResult.photos),
     ]);
     const notes = [saveResult.reason, emailResult.reason].filter(Boolean);
 

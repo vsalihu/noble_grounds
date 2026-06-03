@@ -5,17 +5,32 @@ import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 import { LogOut } from "lucide-react";
 import { GalleryProjectManager } from "@/components/admin/GalleryProjectManager";
+import { QuoteEnquiryManager } from "@/components/admin/QuoteEnquiryManager";
+import { ReviewManager } from "@/components/admin/ReviewManager";
 import { Container } from "@/components/layout/Container";
 import { Button } from "@/components/ui/Button";
-import { Card } from "@/components/ui/Card";
+import { LoadingSpinner } from "@/components/ui/LoadingSpinner";
+import { SkeletonCard } from "@/components/ui/SkeletonCard";
+import { StatusMessage } from "@/components/ui/StatusMessage";
+import { fetchQuoteEnquiries } from "@/lib/quote-enquiries";
+import { sortReviews } from "@/lib/reviews";
 import { supabase } from "@/lib/supabase/client";
-import type { GalleryProjectWithComparisons } from "@/types/supabase";
+import type {
+  GalleryProjectWithComparisons,
+  QuoteEnquiry,
+  Review,
+} from "@/types/supabase";
+
+type AdminTab = "gallery" | "reviews" | "quotes";
 
 export function AdminDashboardShell() {
   const router = useRouter();
   const [user, setUser] = useState<User | null>(null);
   const [projects, setProjects] = useState<GalleryProjectWithComparisons[]>([]);
+  const [reviews, setReviews] = useState<Review[]>([]);
+  const [quoteEnquiries, setQuoteEnquiries] = useState<QuoteEnquiry[]>([]);
   const [selectedProjectId, setSelectedProjectId] = useState<string | null>(null);
+  const [activeTab, setActiveTab] = useState<AdminTab>("gallery");
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(true);
 
@@ -56,6 +71,40 @@ export function AdminDashboardShell() {
     );
   }, []);
 
+  const loadReviews = useCallback(async () => {
+    if (!supabase) {
+      return;
+    }
+
+    const { data, error: fetchError } = await supabase
+      .from("reviews")
+      .select("*")
+      .order("display_order", { ascending: true })
+      .order("created_at", { ascending: false });
+
+    if (fetchError) {
+      setError(fetchError.message);
+      return;
+    }
+
+    setReviews(sortReviews((data ?? []) as Review[]));
+  }, []);
+
+  const loadQuoteEnquiries = useCallback(async () => {
+    if (!supabase) {
+      return;
+    }
+
+    const result = await fetchQuoteEnquiries(supabase);
+
+    if (result.error) {
+      setError(result.error);
+      return;
+    }
+
+    setQuoteEnquiries(result.data);
+  }, []);
+
   useEffect(() => {
     async function checkAuth() {
       if (!supabase) {
@@ -80,12 +129,12 @@ export function AdminDashboardShell() {
       }
 
       setUser(data.user);
-      await loadProjects();
+      await Promise.all([loadProjects(), loadReviews(), loadQuoteEnquiries()]);
       setIsLoading(false);
     }
 
     void checkAuth();
-  }, [loadProjects, router]);
+  }, [loadProjects, loadQuoteEnquiries, loadReviews, router]);
 
   async function handleLogout() {
     if (supabase) {
@@ -99,7 +148,14 @@ export function AdminDashboardShell() {
     return (
       <main className="min-h-svh bg-cream py-10">
         <Container>
-          <Card className="p-6">Checking admin access...</Card>
+          <div className="grid gap-5">
+            <LoadingSpinner label="Checking admin access" />
+            <div className="grid gap-4 md:grid-cols-3">
+              <SkeletonCard />
+              <SkeletonCard />
+              <SkeletonCard />
+            </div>
+          </div>
         </Container>
       </main>
     );
@@ -114,7 +170,7 @@ export function AdminDashboardShell() {
               Noble Grounds Admin
             </p>
             <h1 className="mt-2 font-serif text-5xl font-semibold text-noble-green-950">
-              Gallery dashboard
+              Admin dashboard
             </h1>
             <p className="mt-3 text-sm text-noble-green-700">
               Signed in as {user?.email}
@@ -127,21 +183,51 @@ export function AdminDashboardShell() {
         </div>
 
         {error ? (
-          <div
-            className="mt-6 rounded-md border border-earth-200 bg-earth-200/35 px-4 py-3 text-sm font-medium text-earth-700"
-            role="alert"
-          >
-            {error}
+          <div className="mt-6">
+            <StatusMessage tone="error">{error}</StatusMessage>
           </div>
         ) : null}
 
+        <div className="mt-8 grid gap-3 rounded-2xl border border-border-soft bg-white/70 p-2 shadow-[var(--shadow-soft)] min-[430px]:grid-cols-3">
+          <Button
+            type="button"
+            variant={activeTab === "gallery" ? "primary" : "ghost"}
+            onClick={() => setActiveTab("gallery")}
+          >
+            Gallery Projects
+          </Button>
+          <Button
+            type="button"
+            variant={activeTab === "reviews" ? "primary" : "ghost"}
+            onClick={() => setActiveTab("reviews")}
+          >
+            Reviews
+          </Button>
+          <Button
+            type="button"
+            variant={activeTab === "quotes" ? "primary" : "ghost"}
+            onClick={() => setActiveTab("quotes")}
+          >
+            Quote Enquiries
+          </Button>
+        </div>
+
         <div className="mt-8">
-          <GalleryProjectManager
-            projects={projects}
-            selectedProjectId={selectedProjectId}
-            onSelectProject={setSelectedProjectId}
-            onChanged={loadProjects}
-          />
+          {activeTab === "gallery" ? (
+            <GalleryProjectManager
+              projects={projects}
+              selectedProjectId={selectedProjectId}
+              onSelectProject={setSelectedProjectId}
+              onChanged={loadProjects}
+            />
+          ) : activeTab === "reviews" ? (
+            <ReviewManager reviews={reviews} onChanged={loadReviews} />
+          ) : (
+            <QuoteEnquiryManager
+              enquiries={quoteEnquiries}
+              onChanged={loadQuoteEnquiries}
+            />
+          )}
         </div>
       </Container>
     </main>

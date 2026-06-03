@@ -1,4 +1,9 @@
-export type QuoteEnquiryStatus = "new" | "contacted" | "quoted" | "closed";
+export type QuoteEnquiryStatus =
+  | "new"
+  | "contacted"
+  | "quoted"
+  | "completed"
+  | "archived";
 export type GalleryImagePhase = "before" | "after";
 
 export type QuoteEnquiry = {
@@ -10,6 +15,8 @@ export type QuoteEnquiry = {
   customer_type: string;
   service_needed: string;
   message: string | null;
+  photo_urls: string[] | null;
+  photo_storage_paths: string[] | null;
   source: string;
   status: QuoteEnquiryStatus | string;
   created_at: string;
@@ -68,4 +75,18 @@ export type GalleryComparison = {
 
 export type GalleryProjectWithComparisons = GalleryProject & {
   gallery_comparisons: GalleryComparison[];
+};
+
+export type Review = {
+  id: string;
+  customer_name: string;
+  customer_type: string | null;
+  location: string | null;
+  rating: number;
+  review_text: string;
+  is_approved: boolean;
+  is_featured: boolean;
+  display_order: number;
+  created_at: string;
+  updated_at: string;
 };

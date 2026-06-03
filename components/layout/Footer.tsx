@@ -37,7 +37,7 @@ export function Footer() {
               Contact
             </p>
             <div className="mt-4 grid gap-3 text-sm text-cream">
-              <a className="flex items-center gap-3" href={`tel:${siteConfig.phone}`}>
+              <a className="flex items-center gap-3" href={`tel:${siteConfig.phone.replace(/\s/g, "")}`}>
                 <Phone className="size-4 text-sage-200" />
                 {siteConfig.phone}
               </a>
@@ -68,9 +68,19 @@ export function Footer() {
           </div>
         </div>
 
-        <div className="mt-10 border-t border-white/10 pt-6 text-xs text-sage-200">
-          Copyright {new Date().getFullYear()} Noble Grounds. Premium grass
-          mowing in Leverington, Wisbech.
+        <div className="mt-10 flex flex-col gap-3 border-t border-white/10 pt-6 text-xs text-sage-200 md:flex-row md:items-center md:justify-between">
+          <p>
+            Copyright {new Date().getFullYear()} Noble Grounds. Premium grass
+            mowing in Leverington, Wisbech.
+          </p>
+          <div className="flex flex-wrap gap-3">
+            <Link href="/privacy-policy" className="hover:text-ivory">
+              Privacy Policy
+            </Link>
+            <Link href="/terms" className="hover:text-ivory">
+              Terms
+            </Link>
+          </div>
         </div>
       </Container>
     </footer>

@@ -29,7 +29,7 @@ const contactCards = [
   {
     title: "Call",
     text: "Speak directly about the property, access, and service needed.",
-    href: `tel:${siteConfig.phone}`,
+    href: `tel:${siteConfig.phone.replace(/\s/g, "")}`,
     action: siteConfig.phone,
     icon: Phone,
   },

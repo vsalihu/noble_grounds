@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Cormorant_Garamond, Inter } from "next/font/google";
+import { ClarityProvider } from "@/components/analytics/ClarityProvider";
 import { siteConfig } from "@/data/site";
 import { createMetadata } from "@/lib/seo";
 import "./globals.css";
@@ -49,7 +50,10 @@ export default function RootLayout({
       lang="en"
       className={`${inter.variable} ${cormorant.variable} h-full antialiased`}
     >
-      <body className="flex min-h-full flex-col">{children}</body>
+      <body className="flex min-h-full flex-col">
+        <ClarityProvider />
+        {children}
+      </body>
     </html>
   );
 }
