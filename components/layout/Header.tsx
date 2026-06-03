@@ -1,9 +1,10 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
-import { Leaf, Menu, X } from "lucide-react";
+import { Menu, X } from "lucide-react";
 import { useState } from "react";
 import { siteConfig } from "@/data/site";
 import { Button } from "@/components/ui/Button";
@@ -25,8 +26,15 @@ export function Header() {
           onClick={closeMenu}
           aria-label="Noble Grounds home"
         >
-          <span className="flex size-11 shrink-0 items-center justify-center rounded-md bg-noble-green-800 text-ivory shadow-[0_12px_30px_rgb(18_50_38_/_0.2)] transition duration-200 group-hover:bg-noble-green-900">
-            <Leaf className="size-5" aria-hidden="true" />
+          <span className="flex size-12 shrink-0 items-center justify-center overflow-hidden rounded-md border border-noble-green-900/10 bg-ivory shadow-[0_12px_30px_rgb(18_50_38_/_0.16)] transition duration-200 group-hover:-translate-y-0.5 group-hover:shadow-[0_16px_34px_rgb(18_50_38_/_0.2)]">
+            <Image
+              src="/images/logo.png"
+              alt=""
+              width={48}
+              height={48}
+              className="h-full w-full object-contain p-1"
+              priority
+            />
           </span>
           <span className="min-w-0">
             <span className="block truncate font-serif text-2xl leading-none font-semibold text-noble-green-900">

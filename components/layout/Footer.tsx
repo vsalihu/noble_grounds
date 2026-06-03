@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { Mail, MapPin, MessageCircle, Phone } from "lucide-react";
 import { Container } from "@/components/layout/Container";
 import { siteConfig } from "@/data/site";
@@ -9,7 +10,18 @@ export function Footer() {
       <Container className="py-12 md:py-16">
         <div className="grid gap-10 lg:grid-cols-[1.1fr_0.9fr_0.8fr]">
           <div>
-            <p className="font-serif text-4xl font-semibold">Noble Grounds</p>
+            <div className="flex items-center gap-4">
+              <span className="flex size-14 shrink-0 items-center justify-center overflow-hidden rounded-md border border-white/10 bg-ivory shadow-[0_18px_42px_rgb(0_0_0_/_0.2)]">
+                <Image
+                  src="/images/logo.png"
+                  alt=""
+                  width={56}
+                  height={56}
+                  className="h-full w-full object-contain p-1"
+                />
+              </span>
+              <p className="font-serif text-4xl font-semibold">Noble Grounds</p>
+            </div>
             <p className="mt-4 max-w-md text-sm leading-7 text-sage-200">
               Premium grass mowing for homes, landlords, businesses, and estate
               agents across Leverington and the Wisbech area.

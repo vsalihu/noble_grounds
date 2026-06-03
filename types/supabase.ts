@@ -90,3 +90,49 @@ export type Review = {
   created_at: string;
   updated_at: string;
 };
+
+export type SiteContentSectionKey =
+  | "home_hero"
+  | "home_intro"
+  | "services_intro"
+  | "prices_intro"
+  | "about_intro"
+  | "contact_intro";
+
+export type SiteContent = {
+  id: string;
+  section_key: SiteContentSectionKey | string;
+  title: string | null;
+  subtitle: string | null;
+  body: string | null;
+  button_label: string | null;
+  button_href: string | null;
+  image_url: string | null;
+  image_storage_path: string | null;
+  extra: Record<string, unknown> | null;
+  updated_at: string;
+};
+
+export type EditableService = {
+  id: string;
+  title: string;
+  description: string;
+  customer_type: string | null;
+  icon_key: string | null;
+  image_url: string | null;
+  image_storage_path: string | null;
+  is_active: boolean;
+  display_order: number;
+  created_at: string;
+  updated_at: string;
+};
+
+export type PriceFactor = {
+  id: string;
+  title: string;
+  description: string;
+  is_active: boolean;
+  display_order: number;
+  created_at: string;
+  updated_at: string;
+};

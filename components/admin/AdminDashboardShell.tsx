@@ -5,23 +5,34 @@ import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 import { LogOut } from "lucide-react";
 import { GalleryProjectManager } from "@/components/admin/GalleryProjectManager";
+import { PriceFactorsManager } from "@/components/admin/PriceFactorsManager";
 import { QuoteEnquiryManager } from "@/components/admin/QuoteEnquiryManager";
 import { ReviewManager } from "@/components/admin/ReviewManager";
+import { ServicesContentManager } from "@/components/admin/ServicesContentManager";
+import { SiteContentManager } from "@/components/admin/SiteContentManager";
 import { Container } from "@/components/layout/Container";
 import { Button } from "@/components/ui/Button";
 import { LoadingSpinner } from "@/components/ui/LoadingSpinner";
 import { SkeletonCard } from "@/components/ui/SkeletonCard";
 import { StatusMessage } from "@/components/ui/StatusMessage";
+import {
+  fetchAdminPriceFactors,
+  fetchAdminServices,
+  fetchAdminSiteContent,
+} from "@/lib/cms";
 import { fetchQuoteEnquiries } from "@/lib/quote-enquiries";
 import { sortReviews } from "@/lib/reviews";
 import { supabase } from "@/lib/supabase/client";
 import type {
+  EditableService,
   GalleryProjectWithComparisons,
+  PriceFactor,
   QuoteEnquiry,
   Review,
+  SiteContent,
 } from "@/types/supabase";
 
-type AdminTab = "gallery" | "reviews" | "quotes";
+type AdminTab = "gallery" | "reviews" | "quotes" | "site" | "services" | "prices";
 
 export function AdminDashboardShell() {
   const router = useRouter();
@@ -29,6 +40,9 @@ export function AdminDashboardShell() {
   const [projects, setProjects] = useState<GalleryProjectWithComparisons[]>([]);
   const [reviews, setReviews] = useState<Review[]>([]);
   const [quoteEnquiries, setQuoteEnquiries] = useState<QuoteEnquiry[]>([]);
+  const [siteContent, setSiteContent] = useState<SiteContent[]>([]);
+  const [services, setServices] = useState<EditableService[]>([]);
+  const [priceFactors, setPriceFactors] = useState<PriceFactor[]>([]);
   const [selectedProjectId, setSelectedProjectId] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<AdminTab>("gallery");
   const [error, setError] = useState("");
@@ -105,6 +119,51 @@ export function AdminDashboardShell() {
     setQuoteEnquiries(result.data);
   }, []);
 
+  const loadSiteContent = useCallback(async () => {
+    if (!supabase) {
+      return;
+    }
+
+    const result = await fetchAdminSiteContent(supabase);
+
+    if (result.error) {
+      setError(result.error);
+      return;
+    }
+
+    setSiteContent(result.data);
+  }, []);
+
+  const loadServices = useCallback(async () => {
+    if (!supabase) {
+      return;
+    }
+
+    const result = await fetchAdminServices(supabase);
+
+    if (result.error) {
+      setError(result.error);
+      return;
+    }
+
+    setServices(result.data);
+  }, []);
+
+  const loadPriceFactors = useCallback(async () => {
+    if (!supabase) {
+      return;
+    }
+
+    const result = await fetchAdminPriceFactors(supabase);
+
+    if (result.error) {
+      setError(result.error);
+      return;
+    }
+
+    setPriceFactors(result.data);
+  }, []);
+
   useEffect(() => {
     async function checkAuth() {
       if (!supabase) {
@@ -129,12 +188,27 @@ export function AdminDashboardShell() {
       }
 
       setUser(data.user);
-      await Promise.all([loadProjects(), loadReviews(), loadQuoteEnquiries()]);
+      await Promise.all([
+        loadProjects(),
+        loadReviews(),
+        loadQuoteEnquiries(),
+        loadSiteContent(),
+        loadServices(),
+        loadPriceFactors(),
+      ]);
       setIsLoading(false);
     }
 
     void checkAuth();
-  }, [loadProjects, loadQuoteEnquiries, loadReviews, router]);
+  }, [
+    loadPriceFactors,
+    loadProjects,
+    loadQuoteEnquiries,
+    loadReviews,
+    loadServices,
+    loadSiteContent,
+    router,
+  ]);
 
   async function handleLogout() {
     if (supabase) {
@@ -188,7 +262,7 @@ export function AdminDashboardShell() {
           </div>
         ) : null}
 
-        <div className="mt-8 grid gap-3 rounded-2xl border border-border-soft bg-white/70 p-2 shadow-[var(--shadow-soft)] min-[430px]:grid-cols-3">
+        <div className="mt-8 grid gap-3 rounded-2xl border border-border-soft bg-white/70 p-2 shadow-[var(--shadow-soft)] min-[430px]:grid-cols-2 lg:grid-cols-3">
           <Button
             type="button"
             variant={activeTab === "gallery" ? "primary" : "ghost"}
@@ -210,6 +284,27 @@ export function AdminDashboardShell() {
           >
             Quote Enquiries
           </Button>
+          <Button
+            type="button"
+            variant={activeTab === "site" ? "primary" : "ghost"}
+            onClick={() => setActiveTab("site")}
+          >
+            Site Content
+          </Button>
+          <Button
+            type="button"
+            variant={activeTab === "services" ? "primary" : "ghost"}
+            onClick={() => setActiveTab("services")}
+          >
+            Services
+          </Button>
+          <Button
+            type="button"
+            variant={activeTab === "prices" ? "primary" : "ghost"}
+            onClick={() => setActiveTab("prices")}
+          >
+            Price Factors
+          </Button>
         </div>
 
         <div className="mt-8">
@@ -222,10 +317,19 @@ export function AdminDashboardShell() {
             />
           ) : activeTab === "reviews" ? (
             <ReviewManager reviews={reviews} onChanged={loadReviews} />
-          ) : (
+          ) : activeTab === "quotes" ? (
             <QuoteEnquiryManager
               enquiries={quoteEnquiries}
               onChanged={loadQuoteEnquiries}
+            />
+          ) : activeTab === "site" ? (
+            <SiteContentManager sections={siteContent} onChanged={loadSiteContent} />
+          ) : activeTab === "services" ? (
+            <ServicesContentManager services={services} onChanged={loadServices} />
+          ) : (
+            <PriceFactorsManager
+              factors={priceFactors}
+              onChanged={loadPriceFactors}
             />
           )}
         </div>

@@ -1,4 +1,12 @@
-import { Building2, CalendarCheck, Home, KeyRound, Scissors, Store } from "lucide-react";
+import {
+  Building2,
+  CalendarCheck,
+  Home,
+  KeyRound,
+  Leaf,
+  Scissors,
+  Store,
+} from "lucide-react";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { GlassCard } from "@/components/ui/GlassCard";
 import { Container } from "@/components/layout/Container";
@@ -8,7 +16,9 @@ import { QuoteBand } from "@/components/sections/QuoteBand";
 import { AnimatedProcess } from "@/components/sections/AnimatedProcess";
 import { WhoWeHelp } from "@/components/sections/WhoWeHelp";
 import { ScrollReveal } from "@/components/sections/ScrollReveal";
+import { fetchActiveServices, fetchSiteContent } from "@/lib/cms";
 import { breadcrumbJsonLd, createMetadata } from "@/lib/seo";
+import type { EditableService } from "@/types/supabase";
 
 export const metadata = createMetadata({
   title: "Grass Mowing Services in Leverington and Wisbech",
@@ -26,7 +36,7 @@ export const metadata = createMetadata({
   ],
 });
 
-const services = [
+const fallbackServices = [
   {
     title: "Residential lawn mowing",
     text: "Regular lawn mowing for homeowners who want a neat, reliable finish without chasing a casual gardener.",
@@ -59,7 +69,44 @@ const services = [
   },
 ];
 
-export default function ServicesPage() {
+const iconMap = {
+  building: Building2,
+  calendar: CalendarCheck,
+  home: Home,
+  key: KeyRound,
+  leaf: Leaf,
+  scissors: Scissors,
+  store: Store,
+};
+
+function getServiceCards(editableServices: EditableService[]) {
+  if (!editableServices.length) {
+    return fallbackServices.map((service) => ({
+      title: service.title,
+      text: service.text,
+      icon: service.icon,
+      imageUrl: null as string | null,
+    }));
+  }
+
+  return editableServices.map((service) => ({
+    title: service.title,
+    text: service.description,
+    icon:
+      iconMap[(service.icon_key ?? "scissors") as keyof typeof iconMap] ??
+      Scissors,
+    imageUrl: service.image_url,
+  }));
+}
+
+export default async function ServicesPage() {
+  const [editableServices, siteContent] = await Promise.all([
+    fetchActiveServices(),
+    fetchSiteContent(),
+  ]);
+  const services = getServiceCards(editableServices);
+  const intro = siteContent.services_intro;
+
   return (
     <main>
       <JsonLd
@@ -68,9 +115,12 @@ export default function ServicesPage() {
           { name: "Services", path: "/services" },
         ])}
       />
-      <PageHero eyebrow="Services" title="Premium mowing for homes and professional properties.">
-        Grass mowing in Leverington and lawn mowing across Wisbech, delivered
-        with a clean finish, reliable communication, and a professional standard.
+      <PageHero
+        eyebrow="Services"
+        title={intro?.title ?? "Premium mowing for homes and professional properties."}
+      >
+        {intro?.body ??
+          "Grass mowing in Leverington and lawn mowing across Wisbech, delivered with a clean finish, reliable communication, and a professional standard."}
       </PageHero>
       <Section className="pt-0">
         <Container className="grid gap-8 lg:grid-cols-[0.72fr_1.28fr]">
@@ -105,7 +155,18 @@ export default function ServicesPage() {
                     <p className="mt-4 text-sm leading-7 text-noble-green-700">
                       {service.text}
                     </p>
-                    <div className="mt-6 h-24 rounded-xl border border-earth-200 bg-[linear-gradient(135deg,rgb(220_228_207_/_0.86),rgb(255_253_247_/_0.92),rgb(183_150_115_/_0.22))]" />
+                    {service.imageUrl ? (
+                      <>
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img
+                          src={service.imageUrl}
+                          alt=""
+                          className="mt-6 h-32 w-full rounded-xl border border-earth-200 object-cover"
+                        />
+                      </>
+                    ) : (
+                      <div className="mt-6 h-24 rounded-xl border border-earth-200 bg-[linear-gradient(135deg,rgb(220_228_207_/_0.86),rgb(255_253_247_/_0.92),rgb(183_150_115_/_0.22))]" />
+                    )}
                   </GlassCard>
                 </ScrollReveal>
               );

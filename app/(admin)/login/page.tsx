@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Leaf } from "lucide-react";
+import Image from "next/image";
 import { AdminLoginForm } from "@/components/admin/AdminLoginForm";
 import { Container } from "@/components/layout/Container";
 import { Card } from "@/components/ui/Card";
@@ -18,8 +18,15 @@ export default function AdminLoginPage() {
     <main className="flex min-h-svh items-center bg-cream py-10">
       <Container className="max-w-xl">
         <div className="mb-6 flex items-center gap-3">
-          <span className="flex size-11 items-center justify-center rounded-md bg-noble-green-800 text-ivory shadow-[0_12px_30px_rgb(18_50_38_/_0.2)]">
-            <Leaf className="size-5" aria-hidden="true" />
+          <span className="flex size-12 items-center justify-center overflow-hidden rounded-md border border-noble-green-900/10 bg-ivory shadow-[0_12px_30px_rgb(18_50_38_/_0.16)]">
+            <Image
+              src="/images/logo.png"
+              alt=""
+              width={48}
+              height={48}
+              className="h-full w-full object-contain p-1"
+              priority
+            />
           </span>
           <div>
             <p className="font-serif text-3xl font-semibold text-noble-green-950">

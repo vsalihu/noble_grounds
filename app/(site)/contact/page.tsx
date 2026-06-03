@@ -8,6 +8,7 @@ import { PageHero } from "@/components/sections/PageHero";
 import { QuoteForm } from "@/components/sections/QuoteForm";
 import { ScrollReveal } from "@/components/sections/ScrollReveal";
 import { siteConfig } from "@/data/site";
+import { fetchSiteContent } from "@/lib/cms";
 import { breadcrumbJsonLd, createMetadata } from "@/lib/seo";
 
 export const metadata = createMetadata({
@@ -49,7 +50,10 @@ const contactCards = [
   },
 ];
 
-export default function ContactPage() {
+export default async function ContactPage() {
+  const siteContent = await fetchSiteContent();
+  const intro = siteContent.contact_intro;
+
   return (
     <main>
       <JsonLd
@@ -58,9 +62,12 @@ export default function ContactPage() {
           { name: "Contact", path: "/contact" },
         ])}
       />
-      <PageHero eyebrow="Contact" title="Request a quote for premium grass mowing.">
-        No online booking and no fixed price list. Send the property details and
-        Noble Grounds will respond with the next step for your mowing quote.
+      <PageHero
+        eyebrow="Contact"
+        title={intro?.title ?? "Request a quote for premium grass mowing."}
+      >
+        {intro?.body ??
+          "No online booking and no fixed price list. Send the property details and Noble Grounds will respond with the next step for your mowing quote."}
       </PageHero>
       <Section className="pt-0">
         <Container className="grid gap-8 lg:grid-cols-[0.9fr_1.1fr]">

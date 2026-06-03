@@ -7,6 +7,7 @@ import { PageHero } from "@/components/sections/PageHero";
 import { QuoteBand } from "@/components/sections/QuoteBand";
 import { ScrollReveal } from "@/components/sections/ScrollReveal";
 import { AnimatedDivider } from "@/components/ui/AnimatedDivider";
+import { fetchActivePriceFactors, fetchSiteContent } from "@/lib/cms";
 import { breadcrumbJsonLd, createMetadata } from "@/lib/seo";
 
 export const metadata = createMetadata({
@@ -24,7 +25,7 @@ export const metadata = createMetadata({
   ],
 });
 
-const factors = [
+const fallbackFactors = [
   { title: "Lawn size", text: "The total area and layout of the grass.", icon: Ruler },
   { title: "Access", text: "Gates, parking, rear access, and equipment movement.", icon: Accessibility },
   { title: "Condition", text: "Grass height, wet areas, edges, and first-cut effort.", icon: Leaf },
@@ -32,7 +33,22 @@ const factors = [
   { title: "Waste handling", text: "Whether cuttings are left, binned, or removed.", icon: Trash2 },
 ];
 
-export default function PricesPage() {
+const factorIcons = [Ruler, Accessibility, Leaf, CalendarDays, Trash2];
+
+export default async function PricesPage() {
+  const [editableFactors, siteContent] = await Promise.all([
+    fetchActivePriceFactors(),
+    fetchSiteContent(),
+  ]);
+  const intro = siteContent.prices_intro;
+  const factors = editableFactors.length
+    ? editableFactors.map((factor, index) => ({
+        title: factor.title,
+        text: factor.description,
+        icon: factorIcons[index % factorIcons.length],
+      }))
+    : fallbackFactors;
+
   return (
     <main>
       <JsonLd
@@ -41,10 +57,12 @@ export default function PricesPage() {
           { name: "Prices", path: "/prices" },
         ])}
       />
-      <PageHero eyebrow="Prices" title="Quote-only pricing, tailored to the property.">
-        Noble Grounds does not publish fixed prices or online booking slots.
-        Every grass cutting quote is based on the lawn, access, condition,
-        frequency, and waste handling needed.
+      <PageHero
+        eyebrow="Prices"
+        title={intro?.title ?? "Quote-only pricing, tailored to the property."}
+      >
+        {intro?.body ??
+          "Noble Grounds does not publish fixed prices or online booking slots. Every grass cutting quote is based on the lawn, access, condition, frequency, and waste handling needed."}
       </PageHero>
       <Section className="pt-0">
         <Container>

@@ -8,6 +8,7 @@ import { QuoteBand } from "@/components/sections/QuoteBand";
 import { AnimatedProcess } from "@/components/sections/AnimatedProcess";
 import { ServiceAreaShowcase } from "@/components/sections/ServiceAreaShowcase";
 import { ScrollReveal } from "@/components/sections/ScrollReveal";
+import { fetchSiteContent } from "@/lib/cms";
 import { breadcrumbJsonLd, createMetadata } from "@/lib/seo";
 
 export const metadata = createMetadata({
@@ -43,7 +44,10 @@ const values = [
   },
 ];
 
-export default function AboutPage() {
+export default async function AboutPage() {
+  const siteContent = await fetchSiteContent();
+  const intro = siteContent.about_intro;
+
   return (
     <main>
       <JsonLd
@@ -52,10 +56,12 @@ export default function AboutPage() {
           { name: "About", path: "/about" },
         ])}
       />
-      <PageHero eyebrow="About" title="Local lawn care with a premium standard.">
-        Noble Grounds is a grass mowing business based in Leverington, serving
-        Wisbech and nearby villages with reliable, clean, and professional lawn
-        care.
+      <PageHero
+        eyebrow="About"
+        title={intro?.title ?? "Local lawn care with a premium standard."}
+      >
+        {intro?.body ??
+          "Noble Grounds is a grass mowing business based in Leverington, serving Wisbech and nearby villages with reliable, clean, and professional lawn care."}
       </PageHero>
       <Section className="pt-0">
         <Container className="grid gap-6 lg:grid-cols-[0.95fr_1.05fr]">

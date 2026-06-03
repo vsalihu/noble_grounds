@@ -236,6 +236,9 @@ supabase/migrations/007_quote_photo_uploads.sql
 supabase/migrations/008_reviews.sql
 supabase/migrations/009_quote_status.sql
 supabase/migrations/010_review_approval.sql
+supabase/migrations/011_site_content.sql
+supabase/migrations/012_services_content.sql
+supabase/migrations/013_price_factors.sql
 ```
 
 The migrations create:
@@ -247,11 +250,15 @@ The migrations create:
 - `gallery_comparisons` for paired before/after flip cards.
 - `reviews` for admin-managed public reviews.
 - `reviews.is_approved` for public review moderation.
+- `site_content` for editable page hero and intro content.
+- `services` for editable public service cards.
+- `price_factors` for editable quote-only price factor cards.
 - A private Storage bucket named `quote-photos`.
 - A public Storage bucket named `gallery`.
+- A public Storage bucket named `site-assets` for editable CMS images.
 - RLS policies so public users cannot read quote enquiries.
 - RLS policies so public users can read gallery images.
-- Admin-only insert, update, and delete policies for gallery rows and storage objects.
+- Admin-only insert, update, and delete policies for gallery, review, CMS, service, price factor, and storage rows.
 
 Gallery storage paths should use:
 
@@ -373,6 +380,32 @@ Common Supabase setup issues:
 - Missing `008_reviews.sql`: admin review management and public reviews will not load.
 - Missing `009_quote_status.sql`: quote enquiry statuses, admin deletion, and private photo viewing may not work.
 - Missing `010_review_approval.sql`: public review submissions and approval filtering will not work.
+- Missing `011_site_content.sql`: editable page content and the `site-assets` bucket will not work.
+- Missing `012_services_content.sql`: admin-managed service cards will not work.
+- Missing `013_price_factors.sql`: admin-managed price factor cards will not work.
+
+## Admin CMS Content
+
+The `/dashboard` admin area includes CMS tabs so the public website can be
+updated without editing code:
+
+- `Site Content`: edit major page introductions and hero text for Home,
+  Services, Prices, About, and Contact.
+- `Services`: add, edit, hide, reorder, or delete public service cards.
+- `Price Factors`: add, edit, hide, reorder, or delete quote factor cards on
+  the Prices page.
+
+If these tables are empty or Supabase is unavailable, the public pages keep
+using the built-in fallback content so the website does not go blank.
+
+CMS images are uploaded to the public `site-assets` bucket. Paths use:
+
+```text
+site-assets/{section_key}/{timestamp}-{safe-file-name}
+```
+
+Image uploads accept JPEG, PNG, and WebP files up to 5MB. Admin writes are
+protected by Supabase Auth and RLS through the same `public.is_admin()` helper.
 
 ## Admin Quote Enquiries
 
@@ -472,6 +505,7 @@ Before deploying to Vercel:
 - Apply all Supabase migrations in order.
 - Confirm the public `gallery` bucket exists.
 - Confirm the private `quote-photos` bucket exists.
+- Confirm the public `site-assets` bucket exists.
 - Create the admin user in Supabase Auth.
 - Set admin app metadata to `{ "role": "admin" }`.
 - Verify Resend sender/domain and API key.
@@ -501,6 +535,7 @@ Post-deployment checks:
 - Test `/login` with the admin account.
 - Test `/dashboard` image upload from desktop and mobile.
 - Test `/dashboard` quote enquiries, status changes, photo links, search, and filters.
+- Test `/dashboard` Site Content, Services, and Price Factors tabs.
 - Confirm uploaded images appear on `/gallery`.
 - Test delete from the dashboard.
 - Test every public page at 320px, 375px, 430px, 768px, 1024px, and desktop widths.

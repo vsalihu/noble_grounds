@@ -6,10 +6,19 @@ import { GradientBackground } from "@/components/ui/GradientBackground";
 import { Container } from "@/components/layout/Container";
 import { ScrollReveal } from "@/components/sections/ScrollReveal";
 import { siteConfig } from "@/data/site";
+import type { SiteContent } from "@/types/supabase";
 
 const trustChips = ["Quote-only", "Photo quotes", "Local service"];
 
-export function HomeHero() {
+export function HomeHero({ content }: { content?: SiteContent }) {
+  const title =
+    content?.title ?? "Premium mowing for lawns that need to look cared for.";
+  const subtitle =
+    content?.subtitle ??
+    "A quote-only grass mowing service for homes, landlords, businesses, and estate agents across Leverington, Wisbech, and nearby villages.";
+  const buttonLabel = content?.button_label ?? "Request Quote";
+  const buttonHref = content?.button_href ?? "/contact";
+
   return (
     <GradientBackground className="pt-8 md:pt-12">
       <Container className="grid min-h-[calc(100svh-5rem)] gap-10 pb-14 lg:grid-cols-[0.92fr_1.08fr] lg:items-center lg:gap-14 lg:pb-20">
@@ -18,16 +27,15 @@ export function HomeHero() {
             Leverington, Wisbech and nearby areas
           </Badge>
           <h1 className="text-balance mt-6 font-serif text-[3.35rem] font-semibold leading-[0.9] text-noble-green-950 min-[430px]:text-7xl md:text-8xl xl:text-[6.9rem]">
-            Premium mowing for lawns that need to look cared for.
+            {title}
           </h1>
           <p className="mt-6 max-w-2xl text-base leading-8 text-noble-green-700 min-[430px]:text-lg">
-            A quote-only grass mowing service for homes, landlords, businesses,
-            and estate agents across Leverington, Wisbech, and nearby villages.
+            {subtitle}
           </p>
 
           <div className="mt-8 grid gap-3 min-[430px]:grid-cols-2 md:flex">
-            <Button href="/contact" variant="grass">
-              Request Quote
+            <Button href={buttonHref} variant="grass">
+              {buttonLabel}
               <ArrowRight className="ml-2 size-4" aria-hidden="true" />
             </Button>
             <Button
@@ -65,6 +73,18 @@ export function HomeHero() {
             <div className="absolute left-5 top-5 rounded-xl border border-ivory/15 bg-ivory/10 px-4 py-3 text-xs font-semibold uppercase tracking-[0.16em] text-ivory backdrop-blur">
               Noble Grounds
             </div>
+
+            {content?.image_url ? (
+              <>
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={content.image_url}
+                  alt=""
+                  className="absolute inset-0 h-full w-full object-cover opacity-70"
+                />
+                <div className="absolute inset-0 bg-[linear-gradient(180deg,rgb(7_23_16_/_0.18),rgb(7_23_16_/_0.82))]" />
+              </>
+            ) : null}
 
             <div className="absolute inset-x-5 bottom-5 grid gap-4 md:inset-x-8 md:bottom-8 md:grid-cols-[0.9fr_1.1fr]">
               <BeforeAfterPreview />
