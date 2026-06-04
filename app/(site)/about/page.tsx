@@ -1,4 +1,5 @@
 import { MapPin, ShieldCheck, Sparkles } from "lucide-react";
+import Image from "next/image";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { Container } from "@/components/layout/Container";
 import { Section } from "@/components/layout/Section";
@@ -67,6 +68,14 @@ export default async function AboutPage() {
         <Container className="grid gap-6 lg:grid-cols-[0.95fr_1.05fr]">
           <ScrollReveal>
             <div className="relative min-h-96 overflow-hidden rounded-2xl border border-border-soft bg-[linear-gradient(145deg,#071710,#123226_52%,#697a58)] shadow-[var(--shadow-lifted)]">
+              <Image
+                src="/images/site/overgrown-to-presentable.jpg"
+                alt="A freshly mown local lawn with clean presentation"
+                fill
+                sizes="(min-width: 1024px) 45vw, 92vw"
+                className="object-cover"
+              />
+              <div className="absolute inset-0 bg-[linear-gradient(180deg,rgb(7_23_16_/_0.08),rgb(7_23_16_/_0.74))]" />
               <div className="absolute inset-8 rounded-2xl border border-ivory/15" />
               <div className="absolute bottom-6 left-6 right-6 rounded-xl border border-ivory/15 bg-ivory/12 p-5 text-ivory backdrop-blur">
                 <p className="text-xs font-semibold uppercase tracking-[0.16em] text-sage-200">

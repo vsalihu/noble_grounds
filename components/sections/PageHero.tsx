@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import Image from "next/image";
 import { Badge } from "@/components/ui/Badge";
 import { Container } from "@/components/layout/Container";
 import { ScrollReveal } from "@/components/sections/ScrollReveal";
@@ -25,6 +26,14 @@ export function PageHero({ eyebrow, title, children }: PageHeroProps) {
         </ScrollReveal>
         <ScrollReveal delay={0.08} className="hidden lg:block">
           <div className="relative min-h-72 overflow-hidden rounded-2xl border border-border-soft bg-[linear-gradient(145deg,#071710,#123226_52%,#9aaa83)] shadow-[var(--shadow-lifted)]">
+            <Image
+              src="/images/site/overgrown-to-presentable.jpg"
+              alt="Freshly mown lawn with a premium Noble Grounds finish"
+              fill
+              sizes="34vw"
+              className="object-cover"
+            />
+            <div className="absolute inset-0 bg-[linear-gradient(180deg,rgb(7_23_16_/_0.12),rgb(7_23_16_/_0.76))]" />
             <div className="absolute inset-6 rounded-2xl border border-ivory/15" />
             <div className="absolute bottom-6 left-6 right-6 rounded-xl border border-ivory/15 bg-ivory/12 p-5 text-ivory backdrop-blur">
               <p className="text-xs font-semibold uppercase tracking-[0.16em] text-sage-200">

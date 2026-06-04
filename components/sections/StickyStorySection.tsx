@@ -1,4 +1,5 @@
 import { Camera, CheckCircle2, ClipboardCheck, Scissors } from "lucide-react";
+import Image from "next/image";
 import { Container } from "@/components/layout/Container";
 import { Section } from "@/components/layout/Section";
 import { ScrollReveal } from "@/components/sections/ScrollReveal";
@@ -35,9 +36,16 @@ export function StickyStorySection() {
         <div className="lg:sticky lg:top-28 lg:self-start">
           <ScrollReveal>
             <div className="relative min-h-[25rem] overflow-hidden rounded-3xl border border-border-soft bg-[linear-gradient(145deg,#071710,#123226_48%,#697a58)] shadow-[var(--shadow-lifted)] md:min-h-[34rem]">
-              <div className="absolute inset-7 rounded-3xl border border-ivory/15" />
+              <Image
+                src="/images/site/overgrown-to-presentable.jpg"
+                alt="A lawn changing from overgrown to freshly mown"
+                fill
+                sizes="(min-width: 1024px) 45vw, 92vw"
+                className="object-cover"
+              />
+              <div className="absolute inset-0 bg-[linear-gradient(180deg,rgb(7_23_16_/_0.08),rgb(7_23_16_/_0.78))]" />
+              <div className="absolute inset-7 rounded-3xl border border-ivory/18" />
               <div className="absolute -right-16 top-10 size-48 rounded-full border border-ivory/10" />
-              <div className="absolute bottom-0 left-0 right-0 h-2/5 bg-[linear-gradient(180deg,transparent,rgb(7_23_16_/_0.72))]" />
               <div className="absolute bottom-6 left-6 right-6 rounded-2xl border border-ivory/15 bg-ivory/12 p-5 text-ivory backdrop-blur">
                 <p className="text-xs font-semibold uppercase tracking-[0.16em] text-sage-200">
                   From overgrown to presentable

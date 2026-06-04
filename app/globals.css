@@ -147,6 +147,15 @@ main {
   mask-image: linear-gradient(to right, transparent, black 8%, black 92%, transparent);
 }
 
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
 .button-premium {
   isolation: isolate;
 }

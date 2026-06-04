@@ -9,21 +9,25 @@ const services = [
     title: "Home lawns",
     text: "Clean, regular mowing for lawns that need to look cared for every week.",
     icon: Home,
+    imageUrl: "/images/site/overgrown-to-presentable.jpg",
   },
   {
     title: "Rental properties",
     text: "Dependable presentation for landlords managing occupied or vacant homes.",
     icon: KeyRound,
+    imageUrl: "/images/site/landlord-property-lawn-care.jpg",
   },
   {
     title: "Business grounds",
     text: "Professional first impressions for small commercial premises and frontages.",
     icon: Store,
+    imageUrl: "/images/site/business-premises-mowing.jpg",
   },
   {
     title: "Estate agents",
     text: "Tidy kerb appeal for listings, viewings, and property handovers.",
     icon: Building2,
+    imageUrl: "/images/site/estate-agent-presentation.jpg",
   },
 ];
 
@@ -44,23 +48,35 @@ export function ServicePreview({ compact = false }: ServicePreviewProps) {
           </h2>
         </ScrollReveal>
 
-        <div className="mt-8 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+        <div className="mt-8 grid items-stretch gap-5 md:grid-cols-2 xl:grid-cols-4">
           {services.map((service, index) => {
             const Icon = service.icon;
 
             return (
               <ScrollReveal key={service.title} delay={index * 0.05}>
-                <GlassCard className="group h-full p-5 transition duration-300 hover:-translate-y-1 hover:shadow-[0_28px_80px_rgb(18_50_38_/_0.15)]">
-                  <div className="flex size-12 items-center justify-center rounded-md bg-noble-green-800 text-ivory transition duration-200 group-hover:bg-noble-green-900">
-                    <Icon className="size-5" />
+                <GlassCard className="group flex h-full flex-col overflow-hidden p-0 transition duration-300 hover:shadow-[0_28px_80px_rgb(18_50_38_/_0.15)] md:hover:-translate-y-1">
+                  <div className="relative min-h-[220px] overflow-hidden border-b border-earth-200 md:min-h-[260px] lg:min-h-[300px]">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={service.imageUrl}
+                      alt={`${service.title} service example`}
+                      className="h-full min-h-[220px] w-full object-cover object-center transition duration-500 md:min-h-[260px] md:group-hover:scale-[1.03] lg:min-h-[300px]"
+                    />
+                    <div className="pointer-events-none absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-black/20 to-transparent" />
                   </div>
-                  <h3 className="mt-6 font-serif text-3xl leading-none font-semibold text-noble-green-950">
-                    {service.title}
-                  </h3>
-                  <p className="mt-4 text-sm leading-7 text-noble-green-700">
-                    {service.text}
-                  </p>
-                  <div className="mt-6 h-28 rounded-md border border-earth-200 bg-[linear-gradient(135deg,rgb(220_228_207_/_0.9),rgb(251_248_241_/_0.92)_42%,rgb(183_150_115_/_0.28))]" />
+                  <div className="flex flex-1 flex-col p-5">
+                    <div className="flex items-start gap-4">
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-md bg-noble-green-800 text-ivory transition duration-200 group-hover:bg-noble-green-900">
+                        <Icon className="size-5" />
+                      </div>
+                      <h3 className="font-serif text-3xl leading-none font-semibold text-noble-green-950">
+                        {service.title}
+                      </h3>
+                    </div>
+                    <p className="mt-4 text-sm leading-7 text-noble-green-700">
+                      {service.text}
+                    </p>
+                  </div>
                 </GlassCard>
               </ScrollReveal>
             );

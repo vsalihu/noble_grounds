@@ -41,31 +41,37 @@ const fallbackServices = [
     title: "Residential lawn mowing",
     text: "Regular lawn mowing for homeowners who want a neat, reliable finish without chasing a casual gardener.",
     icon: Home,
+    imageUrl: "/images/site/overgrown-to-presentable.jpg",
   },
   {
     title: "Landlord property lawn care",
     text: "Grass cutting for occupied homes, between-tenancy tidies, and rental properties that need to remain presentable.",
     icon: KeyRound,
+    imageUrl: "/images/site/landlord-property-lawn-care.jpg",
   },
   {
     title: "Business premises mowing",
     text: "Professional grass mowing for small business frontages, offices, yards, and customer-facing premises.",
     icon: Store,
+    imageUrl: "/images/site/business-premises-mowing.jpg",
   },
   {
     title: "Estate agent presentation",
     text: "Tidy lawns and sharper kerb appeal before photographs, viewings, valuations, and property handovers.",
     icon: Building2,
+    imageUrl: "/images/site/estate-agent-presentation.jpg",
   },
   {
     title: "Regular maintenance",
     text: "Planned mowing schedules for lawns that need consistent attention through the growing season.",
     icon: CalendarCheck,
+    imageUrl: "/images/site/regular-maintenance.jpg",
   },
   {
     title: "One-off cuts",
     text: "Single visits for overgrown grass, seasonal resets, sale preparation, or catching up after a missed cut.",
     icon: Scissors,
+    imageUrl: "/images/site/one-off-cuts.jpg",
   },
 ];
 
@@ -85,7 +91,7 @@ function getServiceCards(editableServices: EditableService[]) {
       title: service.title,
       text: service.text,
       icon: service.icon,
-      imageUrl: null as string | null,
+      imageUrl: service.imageUrl,
     }));
   }
 
@@ -139,34 +145,39 @@ export default async function ServicesPage() {
               </p>
             </GlassCard>
           </ScrollReveal>
-          <div className="grid gap-4 md:grid-cols-2">
+          <div className="grid items-stretch gap-5 md:grid-cols-2">
             {services.map((service, index) => {
               const Icon = service.icon;
 
               return (
                 <ScrollReveal key={service.title} delay={index * 0.04}>
-                  <GlassCard className="group h-full p-6 transition duration-300 hover:-translate-y-1 hover:shadow-[0_28px_80px_rgb(18_50_38_/_0.15)]">
-                    <div className="flex size-12 items-center justify-center rounded-md bg-noble-green-800 text-ivory">
-                      <Icon className="size-5" />
-                    </div>
-                    <h2 className="mt-6 font-serif text-3xl leading-none font-semibold text-noble-green-950">
-                      {service.title}
-                    </h2>
-                    <p className="mt-4 text-sm leading-7 text-noble-green-700">
-                      {service.text}
-                    </p>
+                  <GlassCard className="group flex h-full flex-col overflow-hidden p-0 transition duration-300 hover:shadow-[0_28px_80px_rgb(18_50_38_/_0.15)] md:hover:-translate-y-1">
                     {service.imageUrl ? (
-                      <>
+                      <div className="relative min-h-[220px] overflow-hidden border-b border-earth-200 md:min-h-[260px] lg:min-h-[300px]">
                         {/* eslint-disable-next-line @next/next/no-img-element */}
                         <img
                           src={service.imageUrl}
-                          alt=""
-                          className="mt-6 h-32 w-full rounded-xl border border-earth-200 object-cover"
+                          alt={`${service.title} service example`}
+                          className="h-full min-h-[220px] w-full object-cover object-center transition duration-500 md:min-h-[260px] md:group-hover:scale-[1.03] lg:min-h-[300px]"
                         />
-                      </>
+                        <div className="pointer-events-none absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-black/20 to-transparent" />
+                      </div>
                     ) : (
-                      <div className="mt-6 h-24 rounded-xl border border-earth-200 bg-[linear-gradient(135deg,rgb(220_228_207_/_0.86),rgb(255_253_247_/_0.92),rgb(183_150_115_/_0.22))]" />
+                      <div className="min-h-[220px] border-b border-earth-200 bg-[linear-gradient(135deg,rgb(220_228_207_/_0.86),rgb(255_253_247_/_0.92),rgb(183_150_115_/_0.22))] md:min-h-[260px] lg:min-h-[300px]" />
                     )}
+                    <div className="flex flex-1 flex-col p-6">
+                      <div className="flex items-start gap-4">
+                        <div className="flex size-12 shrink-0 items-center justify-center rounded-md bg-noble-green-800 text-ivory shadow-[0_14px_34px_rgb(18_50_38_/_0.16)]">
+                          <Icon className="size-5" />
+                        </div>
+                        <h2 className="font-serif text-3xl leading-none font-semibold text-noble-green-950">
+                          {service.title}
+                        </h2>
+                      </div>
+                      <p className="mt-5 text-sm leading-7 text-noble-green-700">
+                        {service.text}
+                      </p>
+                    </div>
                   </GlassCard>
                 </ScrollReveal>
               );
