@@ -18,6 +18,8 @@ export const siteConfig = {
     "Gorefield",
     "Newton",
     "Tydd St Giles",
+    "Sutton Bridge",
+    "Long Sutton",
   ],
   navigation: [
     { label: "Services", href: "/services" },

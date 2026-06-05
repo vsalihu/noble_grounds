@@ -79,6 +79,34 @@ export function localBusinessJsonLd() {
   };
 }
 
+export function organizationJsonLd() {
+  return {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "@id": `${siteUrl}/#organization`,
+    name: siteConfig.name,
+    url: siteUrl,
+    logo: absoluteUrl("/images/logo.png"),
+    email: siteConfig.email,
+    telephone: siteConfig.phone,
+    sameAs: [],
+  };
+}
+
+export function websiteJsonLd() {
+  return {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "@id": `${siteUrl}/#website`,
+    name: siteConfig.name,
+    url: siteUrl,
+    publisher: {
+      "@id": `${siteUrl}/#organization`,
+    },
+    inLanguage: "en-GB",
+  };
+}
+
 export function serviceJsonLd() {
   return {
     "@context": "https://schema.org",
@@ -105,6 +133,38 @@ export function serviceJsonLd() {
       description:
         "Quote-only pricing based on lawn size, access, condition, frequency, and waste handling.",
     },
+  };
+}
+
+export function reviewsJsonLd(
+  reviews: Array<{
+    customer_name: string;
+    review_text: string;
+    rating: number;
+    created_at?: string;
+  }>,
+) {
+  return {
+    "@context": "https://schema.org",
+    "@graph": reviews.map((review, index) => ({
+      "@type": "Review",
+      "@id": `${siteUrl}/reviews#review-${index + 1}`,
+      itemReviewed: {
+        "@id": `${siteUrl}/#localbusiness`,
+      },
+      author: {
+        "@type": "Person",
+        name: review.customer_name,
+      },
+      reviewBody: review.review_text,
+      reviewRating: {
+        "@type": "Rating",
+        ratingValue: Math.min(5, Math.max(1, Math.round(review.rating || 5))),
+        bestRating: 5,
+        worstRating: 1,
+      },
+      datePublished: review.created_at,
+    })),
   };
 }
 

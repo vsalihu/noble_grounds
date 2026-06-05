@@ -65,6 +65,7 @@ Useful browser widths: `375`, `390`, `430`, `768`, `1024`, `1440`.
 The local SEO configuration lives in:
 
 - `data/site.ts` for domain, contact placeholders, service areas, navigation, and Open Graph image path.
+- `data/serviceAreas.ts` for local service-area landing page content.
 - `lib/seo.ts` for metadata helpers, canonical URLs, and JSON-LD builders.
 - `app/sitemap.ts` and `app/robots.ts` for search crawler discovery.
 
@@ -80,6 +81,46 @@ After deployment:
 - Submit `https://noblegrounds.co.uk/sitemap.xml`.
 - Create or connect a Google Business Profile for Noble Grounds.
 - Replace placeholder contact details with real business contact details.
+
+### Service Area Landing Pages
+
+Local SEO service-area pages live at:
+
+- `/service-areas/leverington`
+- `/service-areas/wisbech`
+- `/service-areas/gorefield`
+- `/service-areas/parson-drove`
+- `/service-areas/newton`
+- `/service-areas/tydd-st-giles`
+- `/service-areas/sutton-bridge`
+- `/service-areas/long-sutton`
+
+There is also an index page at `/service-areas`.
+
+Edit page titles, descriptions, nearby areas, keywords, and FAQs in
+`data/serviceAreas.ts`. The pages are generated from typed static data so they
+do not depend on the CMS tables being populated.
+
+Each area page includes unique metadata, Open Graph data, breadcrumbs,
+FAQ structured data, local service structured data, footer links, and sitemap
+entries. Keep the copy natural and local; do not stuff repeated keywords into
+the page.
+
+### Local SEO Checklist
+
+Before launch and after meaningful content updates:
+
+- Confirm every public page has a unique title and meta description.
+- Confirm `/sitemap.xml` includes all public pages and service-area pages.
+- Confirm `/robots.txt` allows public pages and blocks `/login` and `/dashboard`.
+- Submit the sitemap in Google Search Console after deployment.
+- Create or update the Google Business Profile for Noble Grounds.
+- Keep service-area pages accurate if coverage changes.
+- Add real project photos to the gallery when available.
+- Add only real approved customer reviews.
+- Replace generated or placeholder photos with real Noble Grounds work over time.
+- Keep internal links active between Home, Services, Service Areas, Gallery, Prices, and Contact.
+- Check Clarity behaviour data for pages where visitors stop before requesting a quote.
 
 ## Microsoft Clarity Analytics
 
@@ -115,6 +156,9 @@ Tracked behavioural events:
 - Admin login success
 - Contact page visits
 - Service page visits
+- Service area page visits
+- Service area quote clicks
+- Service area WhatsApp clicks
 
 Privacy notes:
 

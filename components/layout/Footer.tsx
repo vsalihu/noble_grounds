@@ -2,6 +2,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { Mail, MapPin, MessageCircle, Phone } from "lucide-react";
 import { Container } from "@/components/layout/Container";
+import { serviceAreas } from "@/data/serviceAreas";
 import { siteConfig } from "@/data/site";
 
 export function Footer() {
@@ -33,13 +34,14 @@ export function Footer() {
               Service areas
             </p>
             <div className="mt-4 grid grid-cols-2 gap-2 text-sm text-cream">
-              {siteConfig.serviceAreas.map((area) => (
-                <span
-                  key={area}
+              {serviceAreas.map((area) => (
+                <Link
+                  key={area.slug}
+                  href={`/service-areas/${area.slug}`}
                   className="rounded-md border border-white/10 bg-white/5 px-3 py-2"
                 >
-                  {area}
-                </span>
+                  {area.name}
+                </Link>
               ))}
             </div>
           </div>

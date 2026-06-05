@@ -1,4 +1,5 @@
 import type { MetadataRoute } from "next";
+import { serviceAreas } from "@/data/serviceAreas";
 import { absoluteUrl } from "@/lib/seo";
 
 const routes = [
@@ -10,6 +11,7 @@ const routes = [
   "/reviews",
   "/faq",
   "/contact",
+  "/service-areas",
   "/privacy-policy",
   "/terms",
 ];
@@ -17,11 +19,20 @@ const routes = [
 export default function sitemap(): MetadataRoute.Sitemap {
   const now = new Date();
 
-  return routes.map((route) => ({
+  const serviceAreaRoutes = serviceAreas.map((area) => `/service-areas/${area.slug}`);
+
+  return [...routes, ...serviceAreaRoutes].map((route) => ({
     url: absoluteUrl(route || "/"),
     lastModified: now,
     changeFrequency: route === "" ? "weekly" : "monthly",
-    priority: route === "" ? 1 : route === "/contact" ? 0.9 : 0.8,
+    priority:
+      route === ""
+        ? 1
+        : route === "/contact"
+          ? 0.9
+          : route.startsWith("/service-areas/")
+            ? 0.82
+            : 0.8,
   }));
 }
 

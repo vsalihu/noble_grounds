@@ -16,6 +16,7 @@ import { QuoteBand } from "@/components/sections/QuoteBand";
 import { AnimatedProcess } from "@/components/sections/AnimatedProcess";
 import { WhoWeHelp } from "@/components/sections/WhoWeHelp";
 import { ScrollReveal } from "@/components/sections/ScrollReveal";
+import { Button } from "@/components/ui/Button";
 import { fetchActiveServices, fetchSiteContent } from "@/lib/cms";
 import { breadcrumbJsonLd, createMetadata } from "@/lib/seo";
 import type { EditableService } from "@/types/supabase";
@@ -143,6 +144,9 @@ export default async function ServicesPage() {
                 different level of timing, access and finish. The service stays
                 focused on clean mowing and practical communication.
               </p>
+              <Button href="/service-areas" variant="secondary" className="mt-6">
+                View Local Service Areas
+              </Button>
             </GlassCard>
           </ScrollReveal>
           <div className="grid items-stretch gap-5 md:grid-cols-2">

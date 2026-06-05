@@ -5,6 +5,7 @@ import { PageHero } from "@/components/sections/PageHero";
 import { GalleryProjectGrid } from "@/components/gallery/GalleryProjectGrid";
 import { ScrollReveal } from "@/components/sections/ScrollReveal";
 import { TrustHighlights } from "@/components/sections/TrustHighlights";
+import { QuoteBand } from "@/components/sections/QuoteBand";
 import { fetchGalleryProjectsWithComparisons } from "@/lib/gallery";
 import { breadcrumbJsonLd, createMetadata } from "@/lib/seo";
 import type { GalleryProjectWithComparisons } from "@/types/supabase";
@@ -114,6 +115,10 @@ export default async function GalleryPage() {
         </Container>
       </Section>
       <TrustHighlights />
+      <QuoteBand
+        title="Seen enough to request a quote?"
+        text="Send the property area, lawn photos, and the service needed. Noble Grounds will respond with the next step."
+      />
     </main>
   );
 }

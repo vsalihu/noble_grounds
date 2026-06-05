@@ -1,11 +1,13 @@
+import Link from "next/link";
 import { MapPin, Navigation } from "lucide-react";
 import { Container } from "@/components/layout/Container";
 import { Section } from "@/components/layout/Section";
 import { ScrollReveal } from "@/components/sections/ScrollReveal";
-import { siteConfig } from "@/data/site";
+import { Button } from "@/components/ui/Button";
+import { serviceAreas } from "@/data/serviceAreas";
 
 export function ServiceAreaShowcase() {
-  const areas = [...siteConfig.serviceAreas, "Nearby villages"];
+  const areas = serviceAreas;
 
   return (
     <Section className="py-16 md:py-24">
@@ -26,6 +28,9 @@ export function ServiceAreaShowcase() {
                   Noble Grounds is focused on Leverington, Wisbech and nearby
                   villages, keeping the service practical, responsive and local.
                 </p>
+                <Button href="/service-areas" variant="secondary" className="mt-6">
+                  View Service Areas
+                </Button>
                 <div className="mt-6 inline-flex items-center gap-3 rounded-xl border border-ivory/15 bg-ivory/10 px-4 py-3 text-sm font-semibold backdrop-blur">
                   <Navigation className="size-4 text-earth-200" />
                   Quote requests welcome across nearby Fenland villages.
@@ -33,8 +38,9 @@ export function ServiceAreaShowcase() {
               </div>
               <div className="grid gap-3 min-[430px]:grid-cols-2 lg:grid-cols-3">
                 {areas.map((area, index) => (
-                  <div
-                    key={area}
+                  <Link
+                    key={area.slug}
+                    href={`/service-areas/${area.slug}`}
                     className={`group flex min-h-20 items-center gap-3 rounded-2xl border border-ivory/15 bg-ivory/10 px-4 py-4 text-sm font-semibold backdrop-blur transition hover:-translate-y-1 hover:bg-ivory/15 ${
                       index === 0 ? "lg:col-span-2" : ""
                     }`}
@@ -42,8 +48,8 @@ export function ServiceAreaShowcase() {
                     <span className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-ivory/10">
                       <MapPin className="size-4 text-earth-200" />
                     </span>
-                    {area}
-                  </div>
+                    {area.name}
+                  </Link>
                 ))}
               </div>
             </div>

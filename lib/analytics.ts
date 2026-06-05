@@ -18,6 +18,9 @@ export const clarityEvents = {
   servicePageVisit: "service_page_visit",
   quotePhotoUploadStarted: "quote_photo_upload_started",
   quotePhotoUploadCompleted: "quote_photo_upload_completed",
+  serviceAreaPageViewed: "service_area_page_viewed",
+  serviceAreaQuoteClicked: "service_area_quote_clicked",
+  serviceAreaWhatsAppClicked: "service_area_whatsapp_clicked",
 } as const;
 
 export function initClarity(projectId?: string) {
@@ -87,4 +90,16 @@ export function trackQuotePhotoUploadStarted() {
 
 export function trackQuotePhotoUploadCompleted() {
   trackEvent(clarityEvents.quotePhotoUploadCompleted);
+}
+
+export function trackServiceAreaPageViewed() {
+  trackEvent(clarityEvents.serviceAreaPageViewed);
+}
+
+export function trackServiceAreaQuoteClicked() {
+  trackEvent(clarityEvents.serviceAreaQuoteClicked);
+}
+
+export function trackServiceAreaWhatsAppClicked() {
+  trackEvent(clarityEvents.serviceAreaWhatsAppClicked);
 }
