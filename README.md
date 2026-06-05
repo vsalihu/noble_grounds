@@ -31,7 +31,7 @@ NEXT_PUBLIC_CLARITY_ID=your-clarity-project-id
 SUPABASE_SERVICE_ROLE_KEY=your-service-role-key-for-server-side-inserts
 RESEND_API_KEY=re_your_api_key
 QUOTE_NOTIFICATION_EMAIL=viktor.salihu2017@gmail.com,albert.salihu1111@gmail.com
-FROM_EMAIL=Noble Grounds <quotes@your-verified-domain.co.uk>
+FROM_EMAIL=Noble Grounds <contact@noblegrounds.co.uk>
 ```
 
 The quote API works without Supabase or Resend configured, but production should save enquiries and send email notifications. Keep `SUPABASE_SERVICE_ROLE_KEY` and `RESEND_API_KEY` server-side only; never expose them in browser code.
@@ -242,7 +242,7 @@ Set these environment variables in Vercel:
 ```bash
 RESEND_API_KEY=...
 QUOTE_NOTIFICATION_EMAIL=viktor.salihu2017@gmail.com,albert.salihu1111@gmail.com
-FROM_EMAIL=Noble Grounds <quotes@your-verified-domain.co.uk>
+FROM_EMAIL=Noble Grounds <contact@noblegrounds.co.uk>
 ```
 
 Resend setup:
